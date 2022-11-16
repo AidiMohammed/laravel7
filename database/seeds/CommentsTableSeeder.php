@@ -14,7 +14,14 @@ class CommentsTableSeeder extends Seeder
         $posts = App\Post::all();
         $users = App\User::all();
 
-        factory(App\Comment::class,3000)->make()->each(function($comment)use ($posts,$users){
+        $numberComments = (int)$this->command->ask('How many Comments you want to create ?? ',200);
+        if($numberComments < 1)
+        {
+            $this->command->info("You cannot create {$numberComments} comment by defalut 10 comments will be created");
+            $numberComments = 10;
+        }
+
+        factory(App\Comment::class,$numberComments)->make()->each(function($comment)use ($posts,$users){
             $comment->post_id = $posts->random()->id;
             $comment->user_id = $users->random()->id;
             $comment->save();
