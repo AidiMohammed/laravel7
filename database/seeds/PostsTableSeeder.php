@@ -17,12 +17,12 @@ class PostsTableSeeder extends Seeder
         {
             if($numberPosts < 1)
             {
-                $this->command->info("You cannot create {$numberPosts} posts by defalut 10 posts will be created");
+                $this->command->info("You cannot create {$numberPosts} posts by defalut 10 posts will be created !");
                 $numberPosts = 10;
             }
             elseif($users->count() == 0)
             {
-                $this->command->info("To be able to create posts, you must first create accounts for users");
+                $this->command->info("To be able to create posts, you must first create accounts for users !");
                 return;
             }
         }
