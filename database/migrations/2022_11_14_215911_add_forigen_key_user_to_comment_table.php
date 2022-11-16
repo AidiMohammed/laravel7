@@ -14,7 +14,7 @@ class AddForigenKeyUserToCommentTable extends Migration
     public function up()
     {
         Schema::table('comments', function (Blueprint $table) {
-            $table->foreignID('user_id')->constrained();
+            $table->foreignId('user_id')->constrained();
         });
     }
 
@@ -26,7 +26,7 @@ class AddForigenKeyUserToCommentTable extends Migration
     public function down()
     {
         Schema::table('comments', function (Blueprint $table) {
-            $table->dropForeign('user_id');
+            $table->dropForeign('comments_user_id_foreign');
         });
     }
 }
