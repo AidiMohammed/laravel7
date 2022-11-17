@@ -20,9 +20,11 @@ Route::get('/', function () {
 route::view('/factories','factories.create')->name('factories.createPosts');
 route::post('/factories/create/posts','FactoryController@createPosts')->name('factories.storePosts');
 
-Route::get('/home','homeController@homePage')->name('home.homePage');
-Route::get('/about','homeController@aboutPage')->name('home.aboutPage');
-Route::resource('posts','postsController');
+Route::get('/home','HomeController@homePage')->name('home.homePage');
+Route::get('/about','HomeController@aboutPage')->name('home.aboutPage');
+Route::get('/posts/archive','PostsController@archive');
+Route::get('/posts/all','PostsController@all');
+Route::resource('posts','PostsController');
 Route::resource('comment','CommentController')->only(['destroy']);
 Route::post('comment/store/{post}','CommentController@storeMyComment')->name('comments.storeMyComment');
 Auth::routes();

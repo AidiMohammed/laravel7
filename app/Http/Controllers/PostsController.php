@@ -10,7 +10,7 @@ class PostsController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth')->except(['index','show']);
+        $this->middleware('auth')->except(['index','show','all','archive']);
     }
 
     /**
@@ -21,7 +21,19 @@ class PostsController extends Controller
     public function index()
     {
         $posts = Post::withCount('comments')->with('user')->get();
-        return view('posts.index',['posts' => $posts]);
+        return view('posts.index',['posts' => $posts,'table' => 'index']);
+    }
+
+    public function archive()
+    {
+        $posts = Post::onlyTrashed()->withCount('comments')->with('user')->get();
+        return view('posts.index',['posts' => $posts,'table' => 'archive']);
+    }
+
+    public function all()
+    {
+        $posts = Post::withTrashed()->withCount('comments')->with('user')->get();
+        return view('posts.index',['posts' => $posts,'table' => 'all']);
     }
 
     /**

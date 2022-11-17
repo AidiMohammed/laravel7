@@ -3,9 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Post extends Model
 {
+
+    use SoftDeletes;//add deleted_at to posts tabel avec la method softDeletes() 
+
     protected $fillable = ['title','content','active','user_id'];
 
     public function comments()
