@@ -38,6 +38,7 @@ class CommentsTableSeeder extends Seeder
             $comment->post_id = $posts->random()->id;
             $comment->user_id = $users->random()->id;
             $comment->save();
+            $this->command->info("content comment : $comment->content");
         });
     }
 }

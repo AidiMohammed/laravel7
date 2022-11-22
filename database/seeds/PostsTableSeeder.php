@@ -30,6 +30,7 @@ class PostsTableSeeder extends Seeder
         factory(App\Post::class,$numberPosts)->make()->each(function($post) use($users){
             $post->user_id = $users->random()->id;
             $post->save();
+            $this->command->info("title: $post->title\ncontent:$post->content");
         });
     }
 }
