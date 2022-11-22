@@ -2,6 +2,12 @@
 
 @section('content')
     <h1>List Posts</h1>
+
+    <ul class="nav nav-tabs my-3">
+        <li class="nav-item"><a class="nav-link @if($tab === 'index') active @endif" href="/posts/">List ({{$indexCount}})</a></li>
+        <li class="nav-item"><a class="nav-link @if($tab === 'archive') active @endif" href="/posts/archive">Archive ({{$archiveCount}})</a></li>
+        <li class="nav-item"><a class="nav-link @if($tab === 'all') active @endif" href="/posts/all">All ({{$allCount}})</a></li>
+    </ul>
     
     @if (count($posts) > 0)
         <div class="row">
@@ -35,23 +41,35 @@
                         <em>Last update : {{$post->updated_at->diffForhumans()}}</em>
                     @endif
                 </div>
-
-                @if (Auth::check())
                     
                     <div class="card-footer text-muted">
-                        @if (Auth::id() == $post->user_id)
                             <div class="d-flex justify-content-between">
                                 <div class="btn btn-warning">
                                     <a href="{{route('posts.edit',$post->id)}}">Edit</a>
                                 </div>
-                                
-                                <form style="display: inline" method="POST" action="{{route('posts.destroy',$post->id)}}">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn btn-danger" type="submit">Delet</button>
-                                </form>
+                                @if (!$post->deleted_at)
+                                    <form style="display: inline" method="POST" action="{{route('posts.destroy',$post->id)}}">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn btn-danger" type="submit">Delet</button>
+                                    </form>                                    
+                                @else
+                                <div>
+                                    <form style="display: inline" method="POST" action="{{url("/posts/".$post->id."/restore")}}">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button class="btn btn-success" type="submit">Restore</button>
+                                    </form>     
+                                    <form style="display: inline" method="POST" action="{{url("/posts/".$post->id."/forceDelete")}}">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn btn-danger" type="submit">Force Delete</button>
+                                    </form>    
+                                </div>
+                                @endif
+
+
                             </div>
-                        @endif
                 
                         <form method="POST" action="{{route('comments.storeMyComment',$post->id)}}">
                             @csrf
@@ -68,14 +86,14 @@
                             <button class="btn btn-outline-primary" type="submit" id="submit">Add comment</button>
                         </form>
                     </div>
-                @endif
+
             </div>
         </div>
         
         @empty
-        <div class="alert alert-secondary" role="alert">
-            List Posts is empty <a href="{{route('posts.create')}}" class="alert-link">Add new post.</a>
-        </div>
+            <div class="alert alert-secondary" role="alert">
+                List Posts is empty @if($tab == 'index' )<a href="{{route('posts.create')}}" class="alert-link">Add new post.</a>@endif
+            </div>
     @if (count($posts) > 0)
         </div>
     @endif

@@ -46,15 +46,6 @@ class CommentController extends Controller
      */
     public function storeMyComment(Request $request,int $id)
     {
-        /*$newComment = new Comment();
-        $post = Post::findOrfail($id);
-
-        $newComment->content = $request->input('content');
-        $newComment->post()->associate($post)->save();
-
-        session()->flash('status','The new comment has ben created !!');
-        return redirect()->route('posts.index');*/
-
         $validator = Validator::make($request->all(),[
             'content' => 'bail|required|min:4'
         ]);

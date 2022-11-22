@@ -20,20 +20,29 @@ class PostsController extends Controller
      */
     public function index()
     {
-        $posts = Post::withCount('comments')->with('user')->get();
-        return view('posts.index',['posts' => $posts,'table' => 'index']);
+        $posts = Post::withCount('comments')->orderBy('created_at','desc')->with('user')->get();
+        $archiveCount = Post::onlyTrashed()->get();
+        $allCount = Post::withTrashed()->get();
+        $indexCount = Post::withoutTrashed()->get();
+        return view('posts.index',['posts' => $posts,'tab' => 'index','archiveCount' => $archiveCount->count() , 'allCount'=> $allCount->count(), 'indexCount' => $indexCount->count()]);
     }
 
     public function archive()
     {
         $posts = Post::onlyTrashed()->withCount('comments')->with('user')->get();
-        return view('posts.index',['posts' => $posts,'table' => 'archive']);
+        $archiveCount = Post::onlyTrashed()->get();
+        $allCount = Post::withTrashed()->get();
+        $indexCount = Post::withoutTrashed()->get();
+        return view('posts.index',['posts' => $posts,'tab' => 'archive','archiveCount' => $archiveCount->count() , 'allCount'=> $allCount->count(), 'indexCount' => $indexCount->count()]);
     }
 
     public function all()
     {
         $posts = Post::withTrashed()->withCount('comments')->with('user')->get();
-        return view('posts.index',['posts' => $posts,'table' => 'all']);
+        $archiveCount = Post::onlyTrashed()->get();
+        $allCount = Post::withTrashed()->get();
+        $indexCount = Post::withoutTrashed()->get();
+        return view('posts.index',['posts' => $posts,'tab' => 'all','archiveCount' => $archiveCount->count() , 'allCount'=> $allCount->count(), 'indexCount' => $indexCount->count()]);
     }
 
     /**
@@ -127,5 +136,20 @@ class PostsController extends Controller
 
         session()->flash('status','The message has ben deleted !!');
         return redirect()->route('posts.index');
+    }
+
+    public function forceDelete($id)
+    {
+        $post = Post::onlyTrashed($id)->where('id',$id);
+        $post->forceDelete();
+        return redirect()->back();
+    }
+
+    public function restore($id)
+    {
+        $post = Post::onlyTrashed()->where('id',$id)->first();
+
+        $post->restore();
+        return redirect()->back();
     }
 }

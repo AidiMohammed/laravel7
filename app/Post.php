@@ -22,13 +22,18 @@ class Post extends Model
         return $this->belongsTo('App\User');
     }
 
-    //suppression physique
-    /*public static function boot()
+
+    public static function boot()
     {
         parent::boot();
 
         static::deleting(function($post){
             $post->comments()->delete();
         });
-    }*/
+
+        static::restoring(function($post){
+            $post->comments()->restore();
+        });
+    }
+
 }

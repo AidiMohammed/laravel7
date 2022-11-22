@@ -22,8 +22,12 @@ route::post('/factories/create/posts','FactoryController@createPosts')->name('fa
 
 Route::get('/home','HomeController@homePage')->name('home.homePage');
 Route::get('/about','HomeController@aboutPage')->name('home.aboutPage');
+
 Route::get('/posts/archive','PostsController@archive');
 Route::get('/posts/all','PostsController@all');
+Route::patch('/posts/{id}/restore','PostsController@restore');
+Route::delete('/posts/{id}/forceDelete','PostsController@forceDelete');
+
 Route::resource('posts','PostsController');
 Route::resource('comment','CommentController')->only(['destroy']);
 Route::post('comment/store/{post}','CommentController@storeMyComment')->name('comments.storeMyComment');

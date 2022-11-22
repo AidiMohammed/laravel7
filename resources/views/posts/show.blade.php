@@ -29,25 +29,17 @@
               <p class="card-text">{{$comment->content}}</p>
               <em>create at : {{$comment->created_at->diffForHumans()}}</em>
             </div>
-            
-            @if (Auth::check())
             <div class="card-footer d-flex justify-content-between">
-
-                @if (Auth::id() == $comment->user_id)
-                    <div >
-                        <a class="btn btn-warning" style="direction: unset" href="">Edit</a>
-                        <form style="display: inline" action="{{route('comment.destroy',$comment->id)}}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button class="btn btn-danger" type="submit" id="submit">Delete</button>
-                        </form>
-                    </div>
-                @endif
-
+                <div >
+                    <a class="btn btn-warning" style="direction: unset" href="">Edit</a>
+                    <form style="display: inline" action="{{route('comment.destroy',$comment->id)}}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button class="btn btn-danger" type="submit" id="submit">Delete</button>
+                    </form>
+                </div>
                 <h6 style="font-size: 0.8em">Comment create by {{$comment->user->username}}</h6>
             </div>
-            @endif
-
           </div>
         </div>
         @empty
