@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\PostStore;
+use Illuminate\Support\Facades\Gate;
 use App\Post;
 
 class PostsController extends Controller
@@ -20,7 +21,7 @@ class PostsController extends Controller
      */
     public function index()
     {
-        $posts = Post::withCount('comments')->orderBy('created_at','desc')->with('user')->get();
+        $posts = Post::withCount('comments')->orderBy('created_at','desc')->get();
         $archiveCount = Post::onlyTrashed()->get();
         $allCount = Post::withTrashed()->get();
         $indexCount = Post::withoutTrashed()->get();
@@ -100,7 +101,11 @@ class PostsController extends Controller
      */
     public function edit($id)
     {
-        return view('posts.edit',['post' => Post::findOrFail($id)]);
+        $post = Post::findOrFail($id);
+
+        $this->authorize('post.edit',$post);
+
+        return view('posts.edit',['post' => $post]);
     }
 
     /**
@@ -113,6 +118,9 @@ class PostsController extends Controller
     public function update(PostStore $request, $id)
     {
         $post = Post::findOrFail($id);
+
+        $this->authorize('post.update',$post);
+        //if(Gate::denies('post.update',$post)) abort(403,"You can't edit this post !");
 
         $data = $request->only(['title','content']);
         
@@ -132,6 +140,10 @@ class PostsController extends Controller
     public function destroy($id)
     {
         $post = Post::findOrFail($id);
+
+        $this->authorize('post.delete',$post);
+        //if(Gate::denies('post.delete',$post)) abort(403);
+
         $post->delete();
 
         session()->flash('status','The message has ben deleted !!');
@@ -140,7 +152,10 @@ class PostsController extends Controller
 
     public function forceDelete($id)
     {
-        $post = Post::onlyTrashed($id)->where('id',$id);
+        $post = Post::onlyTrashed($id)->where('id',$id)->first();
+
+        $this->authorize('post.forceDelete',$post);
+
         $post->forceDelete();
         return redirect()->back();
     }

@@ -8,6 +8,6 @@ class Profile extends Model
 {
     public function Author()
     {
-        return $this->belongsTo('App\Author');
+        return $this->belongsTo(Author::class);
     }
 }

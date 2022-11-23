@@ -9,6 +9,7 @@
         <li class="nav-item"><a class="nav-link @if($tab === 'all') active @endif" href="/posts/all">All ({{$allCount}})</a></li>
     </ul>
     
+    
     @if (count($posts) > 0)
         <div class="row">
     @endif
