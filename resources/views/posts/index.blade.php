@@ -41,6 +41,11 @@
                     @if ($post->created_at != $post->updated_at)
                         <em>Last update : {{$post->updated_at->diffForhumans()}}</em>
                     @endif
+
+                    @cannot(['update'], $post)
+                        <br><span style="background-color: red; color: white; pading: 30px 30px" class="badge texte-bg-danger">You can'not edit this post</span>
+                    @endcannot
+
                 </div>
                     
                     <div class="card-footer text-muted">

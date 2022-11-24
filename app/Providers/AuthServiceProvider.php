@@ -25,6 +25,16 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
+        Gate::define('secret.page',function($user){
+            if($user->is_admin)
+                return true;
+        });
+
+        Gate::define('factories.createPosts',function($user){
+            if($user->is_admin)
+                return true;
+        });
+
         /*Gate::define('post.delete','App\Policies\postPolicy@delete');
         Gate::define('post.edit','App\Policies\postPolicy@edit');*/
 

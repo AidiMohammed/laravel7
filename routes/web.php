@@ -17,11 +17,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-route::view('/factories','factories.create')->name('factories.createPosts');
+route::view('/factories','factories.create')->name('factories')->middleware('can:factories.createPosts');
+route::get('/secret','HomeController@secret')->name('secret')->middleware('can:secret.page');
 route::post('/factories/create/posts','FactoryController@createPosts')->name('factories.storePosts');
-
-Route::get('/home','HomeController@homePage')->name('home.homePage');
-Route::get('/about','HomeController@aboutPage')->name('home.aboutPage');
 
 Route::get('/posts/archive','PostsController@archive');
 Route::get('/posts/all','PostsController@all');

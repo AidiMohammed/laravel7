@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Database\Seeder;
 
 class FactoryController extends Controller
 {
     public function createPosts(Request $request)
     {
-        $request->validate([
+        /*$request->validate([
             'nmbrPosts' => 'required'
         ]);
 
@@ -16,7 +17,7 @@ class FactoryController extends Controller
 
         if($request->input('nmbrPosts') < 1)
         {
-            session()->flash('tatus','number of posts to create and less than zero');
+            session()->flash('status','number of posts to create and less than zero');
             return redirect()->route('home.homePagae');
         }
 
@@ -24,7 +25,7 @@ class FactoryController extends Controller
             factory('App\Post')->create();
         }
 
-        session()->flash('status',"factories $numberPosts posts ");
-        return redirect()->route('posts.index');
+        session()->flash('status',"factories $numberPosts posts ");*/
+        return redirect()->back();
     }
 }
