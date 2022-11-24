@@ -34,19 +34,21 @@ class PostPolicy
     }
 
     /**
-     * Determine whether the user can create models.
+     * Undocumented function
      *
-     * @param  \App\User  $user
-     * @return mixed
+     * @param Post $Post
+     * @return void
      */
     public function create(User $user)
     {
-        //
+        dd('je suis dans la méthode create ');
+        return true;
     }
 
     public function edit(User $user,Post $post)
     {
-        return $user->id === $post->user_id;
+        if($user->id === $post->user_id || $user->is_admin)
+        return true;
     }
 
     /**
@@ -58,7 +60,8 @@ class PostPolicy
      */
     public function update(User $user, Post $post)
     {
-        //
+        if($user->id === $post->user_id || $user->is_admin)
+        return true;
     }
 
     /**
@@ -70,7 +73,8 @@ class PostPolicy
      */
     public function delete(User $user, Post $post)
     {
-        return $user->id === $post->user_id;
+        if($user->id === $post->user_id || $user->is_admin)
+            return true;
     }
 
     /**
@@ -82,7 +86,8 @@ class PostPolicy
      */
     public function restore(User $user, Post $post)
     {
-    
+        if($user->id === $post->user_id || $user->is_admin)
+            return true;
     }
 
     /**
@@ -94,6 +99,7 @@ class PostPolicy
      */
     public function forceDelete(User $user, Post $post)
     {
-        //
+        if($user->is_admin)
+            return true;
     }
 }

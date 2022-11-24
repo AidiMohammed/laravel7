@@ -24,7 +24,7 @@
         <nav class="navbar navbar-expand-md navbar-dark bg-primary shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
+                    {{ config('app.name', 'The laravel') }}
                 </a>
                 <ul class="nav navbar-nav">
                     <li class="nav-item">

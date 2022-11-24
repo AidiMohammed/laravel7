@@ -44,49 +44,62 @@
                 </div>
                     
                     <div class="card-footer text-muted">
-                            <div class="d-flex justify-content-between">
-                                <div class="btn btn-warning">
-                                    <a href="{{route('posts.edit',$post->id)}}">Edit</a>
-                                </div>
-                                @if (!$post->deleted_at)
-                                    <form style="display: inline" method="POST" action="{{route('posts.destroy',$post->id)}}">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="btn btn-danger" type="submit">Delet</button>
-                                    </form>                                    
-                                @else
-                                <div>
-                                    <form style="display: inline" method="POST" action="{{url("/posts/".$post->id."/restore")}}">
-                                        @csrf
-                                        @method('PATCH')
-                                        <button class="btn btn-success" type="submit">Restore</button>
-                                    </form>     
+
+                    <div class="d-flex justify-content-between">
+
+                        @can('update', $post)
+                            <div class="btn btn-warning ">
+                                <a style="text-decoration: none" role="button" href="{{route('posts.edit',$post->id)}}">Edit</a>
+                            </div>        
+                        @endcan
+
+                        @if (!$post->deleted_at)
+
+                            @can('delete', $post)
+                                <form style="display: inline" method="POST" action="{{route('posts.destroy',$post->id)}}">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn btn-danger" type="submit">Delet</button>
+                                </form>
+                            @endcan
+
+                            @else
+                            <div>
+                                @can('restore', $post)
+                                    
+                                <form style="display: inline" method="POST" action="{{url("/posts/".$post->id."/restore")}}">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button class="btn btn-success" type="submit">Restore</button>
+                                </form>
+                                @endcan
+
+                                @can('forceDelete',$post)
                                     <form style="display: inline" method="POST" action="{{url("/posts/".$post->id."/forceDelete")}}">
                                         @csrf
                                         @method('DELETE')
                                         <button class="btn btn-danger" type="submit">Force Delete</button>
-                                    </form>    
-                                </div>
-                                @endif
-
-
+                                    </form>
+                                @endcan    
                             </div>
-                
-                        <form method="POST" action="{{route('comments.storeMyComment',$post->id)}}">
-                            @csrf
-                            <div class="mb-3 mt-4">
-                                <textarea class="form-control" id="content" rows="3" name="content" placeholder="Your comment hier"></textarea>
-                                @if (session()->has('errorComment') && session()->get('id') == $post->id)
-                                    <div class="alert alert-danger d-flex align-items-center mt-4" role="alert">
-                                        <div>
-                                            {{session()->get('errorComment')}}
-                                        </div>
-                                    </div>
-                                @endif
-                            </div>
-                            <button class="btn btn-outline-primary" type="submit" id="submit">Add comment</button>
-                        </form>
+                        @endif
                     </div>
+                
+                    <form method="POST" action="{{route('comments.storeMyComment',$post->id)}}">
+                        @csrf
+                        <div class="mb-3 mt-4">
+                            <textarea class="form-control" id="content" rows="3" name="content" placeholder="Your comment hier"></textarea>
+                            @if (session()->has('errorComment') && session()->get('id') == $post->id)
+                                <div class="alert alert-danger d-flex align-items-center mt-4" role="alert">
+                                    <div>
+                                        {{session()->get('errorComment')}}
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                        <button class="btn btn-outline-primary" type="submit" id="submit">Add comment</button>
+                    </form>
+                </div>
 
             </div>
         </div>

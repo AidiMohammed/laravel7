@@ -13,7 +13,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        // 'App\Model' => 'App\Policies\ModelPolicy',
+        'App\Post' => 'App\Policies\PostPolicy',
     ];
 
     /**
@@ -25,9 +25,16 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Gate::define('post.delete','App\Policies\postPolicy@delete');
-        Gate::define('post.edit','App\Policies\postPolicy@edit');
+        /*Gate::define('post.delete','App\Policies\postPolicy@delete');
+        Gate::define('post.edit','App\Policies\postPolicy@edit');*/
 
+        /*Gate::resource('post','App\Policies\PostPolicy');
+        /*Gate::define('post.edit','App\Policies\PostPolicy@edit');
+        Gate::define('post.restore','App\Policies\PostPolicy@restore');
+        Gate::define('post.forceDelete','App\Policies\PostPolicy@forceDelete');*/
+        //Gate::define('post.archive','App\Policies\PostPolicy@archive');
+        //Gate::resource('post','App\Policies\PostPolicy');
+        
 
        /* Gate::define('post.update',function($user,$post){
             return $user->id == $post->user_id;
@@ -44,12 +51,12 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('post.forceDelete',function($user,$post){
             if($user->id == $post->user_id)
                 return true;
-        });
-
-        Gate::before(function($user,$ability)
-        {
-            if($user->is_admin && in_array($ability,['post.delete','post.edit','post.update','post.forceDelete']))
-                return true;
         });*/
+
+       Gate::before(function($user,$ability)
+        {
+            if($user->is_admin && in_array($ability,['delete','edit','update','forceDelete','create','archive']))
+                return true;
+        });
     }
 }

@@ -30,6 +30,7 @@ class PostsController extends Controller
 
     public function archive()
     {
+
         $posts = Post::onlyTrashed()->withCount('comments')->with('user')->get();
         $archiveCount = Post::onlyTrashed()->get();
         $allCount = Post::withTrashed()->get();
@@ -76,7 +77,6 @@ class PostsController extends Controller
         session()->flash('status','The post has ben created !!');
 
         return redirect()->route('posts.index');
-
     }
 
     /**
@@ -103,7 +103,7 @@ class PostsController extends Controller
     {
         $post = Post::findOrFail($id);
 
-        $this->authorize('post.edit',$post);
+        $this->authorize('edit',$post);
 
         return view('posts.edit',['post' => $post]);
     }
@@ -119,7 +119,7 @@ class PostsController extends Controller
     {
         $post = Post::findOrFail($id);
 
-        $this->authorize('post.update',$post);
+        $this->authorize('update',$post);
         //if(Gate::denies('post.update',$post)) abort(403,"You can't edit this post !");
 
         $data = $request->only(['title','content']);
@@ -141,7 +141,7 @@ class PostsController extends Controller
     {
         $post = Post::findOrFail($id);
 
-        $this->authorize('post.delete',$post);
+        $this->authorize('delete',$post);
         //if(Gate::denies('post.delete',$post)) abort(403);
 
         $post->delete();
@@ -154,7 +154,7 @@ class PostsController extends Controller
     {
         $post = Post::onlyTrashed($id)->where('id',$id)->first();
 
-        $this->authorize('post.forceDelete',$post);
+        $this->authorize('forceDelete',$post);
 
         $post->forceDelete();
         return redirect()->back();
@@ -163,6 +163,8 @@ class PostsController extends Controller
     public function restore($id)
     {
         $post = Post::onlyTrashed()->where('id',$id)->first();
+
+        $this->authorize('restore',$post);
 
         $post->restore();
         return redirect()->back();
