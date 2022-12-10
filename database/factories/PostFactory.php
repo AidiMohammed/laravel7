@@ -9,6 +9,7 @@ $factory->define(Post::class, function (Faker $faker) {
     return [
         'title' => $faker->words(3,true),
         'content' => $faker->realText(),
-        'active' => $faker->boolean()
+        'active' => $faker->boolean(),
+        'created_at' => $faker->dateTimeBetween('-1 days'),
     ];
 });

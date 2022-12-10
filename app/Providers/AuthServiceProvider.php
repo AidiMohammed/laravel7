@@ -34,6 +34,14 @@ class AuthServiceProvider extends ServiceProvider
             if($user->is_admin)
                 return true;
         });
+        Gate::define('isAdmin',function($user){
+            if($user->is_admin)
+            {
+                dd('je suis la');
+                redirect()->back();
+                return true;
+            }
+        });
 
         /*Gate::define('post.delete','App\Policies\postPolicy@delete');
         Gate::define('post.edit','App\Policies\postPolicy@edit');*/
@@ -65,7 +73,7 @@ class AuthServiceProvider extends ServiceProvider
 
        Gate::before(function($user,$ability)
         {
-            if($user->is_admin && in_array($ability,['delete','edit','update','forceDelete','create','archive']))
+            if($user->is_admin && in_array($ability,['delete','edit','update','forceDelete','create']))
                 return true;
         });
     }

@@ -24,7 +24,7 @@ class PostStore extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'bail|required|min:4|max:120',
+            'title' => 'bail|required|min:4|max:35',
             'content' => 'required',
         ];
     }

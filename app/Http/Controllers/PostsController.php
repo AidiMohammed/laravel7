@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\PostStore;
 use Illuminate\Support\Facades\Gate;
 use App\Post;
+use App\User;
 
 class PostsController extends Controller
 {
@@ -21,11 +22,22 @@ class PostsController extends Controller
      */
     public function index()
     {
-        $posts = Post::withCount('comments')->orderBy('created_at','desc')->get();
+        
+        $posts = Post::withCount('comments')->get();//I use Scope For Model Post with orderBy desc
+        $postMostCommented = Post::mostCommented()->take(5)->get();
+        $mostActiveUser = User::MostActiveUser()->take(5)->get();
         $archiveCount = Post::onlyTrashed()->get();
         $allCount = Post::withTrashed()->get();
         $indexCount = Post::withoutTrashed()->get();
-        return view('posts.index',['posts' => $posts,'tab' => 'index','archiveCount' => $archiveCount->count() , 'allCount'=> $allCount->count(), 'indexCount' => $indexCount->count()]);
+        return view('posts.index',[
+            'posts' => $posts,
+            'index' => 0,
+            'tab' => 'index',
+            'archiveCount' => $archiveCount->count() ,
+            'mostCommented' => $postMostCommented ,
+            'mostActiveUser' => $mostActiveUser,
+            'allCount'=> $allCount->count(), 
+            'indexCount' => $indexCount->count()]);
     }
 
     public function archive()
@@ -70,7 +82,7 @@ class PostsController extends Controller
         $data = request()->only(['title','content']);
 
         $data['active'] = false;
-        $data['user_id'] = Auth::id();
+        $data['user_id'] = Auth::id();//request->user()->id
 
         $newPost->create($data);
 
@@ -87,10 +99,7 @@ class PostsController extends Controller
      */
     public function show($id)
     {
-        $post = Post::findOrFail($id);
-        $comments = $post->comments()->with('user')->get();
-
-        return view('posts.show',['post' => $post,'comments' => $comments]);
+        return view('posts.show',['post' => Post::with('comments')->findOrFail($id)]);
     }
 
     /**

@@ -2,120 +2,108 @@
 
 @section('content')
     <h1>List Posts</h1>
+    @auth
+        @if(Auth::user()->is_admin)    
+            <ul class="nav nav-tabs my-3">
+                <li class="nav-item"><a class="nav-link @if($tab === 'index') active @endif" href="/posts/">List ({{$indexCount}})</a></li>
+                <li class="nav-item"><a class="nav-link @if($tab === 'archive') active @endif" href="/posts/archive">Archive ({{$archiveCount}})</a></li>
+                <li class="nav-item"><a class="nav-link @if($tab === 'all') active @endif" href="/posts/all">All ({{$allCount}})</a></li>
+            </ul>
+        @endif
+    @endauth
 
-    <ul class="nav nav-tabs my-3">
-        <li class="nav-item"><a class="nav-link @if($tab === 'index') active @endif" href="/posts/">List ({{$indexCount}})</a></li>
-        <li class="nav-item"><a class="nav-link @if($tab === 'archive') active @endif" href="/posts/archive">Archive ({{$archiveCount}})</a></li>
-        <li class="nav-item"><a class="nav-link @if($tab === 'all') active @endif" href="/posts/all">All ({{$allCount}})</a></li>
-    </ul>
-    
-    
-    @if (count($posts) > 0)
-        <div class="row">
-    @endif
-        @forelse ($posts as $post)
-        <div class="col-sm-6">
-            <div class="card mt-4">
+    <div class="row">
 
+        <div class="col-8">
+            @forelse ($posts as $post)
+            <div class="card my-3">
                 <div class="card-header d-flex justify-content-between">
-                    <h2><a href="{{route('posts.show',$post->id)}}">{{$post->title}}</a></h2>
-
-                    <form method="GET" action="{{route('posts.show',$post->id)}}">
-                        <div class="mt-2">
-                            <button type="submit" class="btn btn-primary position-relative">
-                                Comments
-                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                    {{$post->comments_count}}
-                                </span>
-                            </button>
-                        </div>
-                    </form>
-
+                    <a style="font-weight: bold;font-size: 30px" href="">{{$post->title}}</a>
+                    <button type="button" class="btn btn-primary position-relative ">
+                        comment(s)
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            {{$post->comments_count}}
+                        </span>
+                    </button>
                 </div>
-                
                 <div class="card-body">
-                    <h6 style="font-size: 0.8em">Post created by : {{$post->user->username}}</h6>
+                    <h5 class="card-title">Created by : {{$post->user->username}}</h5>
                     <p class="card-text">{{$post->content}}</p>
-                    <em>Created at : {{$post->created_at->diffForhumans()}}</em>
                     <br>
-                    @if ($post->created_at != $post->updated_at)
-                        <em>Last update : {{$post->updated_at->diffForhumans()}}</em>
-                    @endif
-
-                    @cannot(['update'], $post)
-                        <br><span style="background-color: red; color: white; pading: 30px 30px" class="badge texte-bg-danger">You can'not edit this post</span>
-                    @endcannot
-
+                    <span class="badge bg-secondary text-light p-2">created at {{$post->created_at}}</span>
                 </div>
+                <div class="card-footer">
                     
-                    <div class="card-footer text-muted">
-
                     <div class="d-flex justify-content-between">
-
                         @can('update', $post)
-                            <div class="btn btn-warning ">
-                                <a style="text-decoration: none" role="button" href="{{route('posts.edit',$post->id)}}">Edit</a>
-                            </div>        
+                            <a class="btn btn-secondary" href="{{route('posts.edit',$post->id)}}">Edit your post</a>
                         @endcan
-
-                        @if (!$post->deleted_at)
-
-                            @can('delete', $post)
-                                <form style="display: inline" method="POST" action="{{route('posts.destroy',$post->id)}}">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn btn-danger" type="submit">Delet</button>
-                                </form>
-                            @endcan
-
-                            @else
-                            <div>
-                                @can('restore', $post)
-                                    
-                                <form style="display: inline" method="POST" action="{{url("/posts/".$post->id."/restore")}}">
-                                    @csrf
-                                    @method('PATCH')
-                                    <button class="btn btn-success" type="submit">Restore</button>
-                                </form>
-                                @endcan
-
-                                @can('forceDelete',$post)
-                                    <form style="display: inline" method="POST" action="{{url("/posts/".$post->id."/forceDelete")}}">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="btn btn-danger" type="submit">Force Delete</button>
-                                    </form>
-                                @endcan    
-                            </div>
-                        @endif
+                        @can('delete', $post)
+                            <form action="{{route('posts.destroy',$post->id)}}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger">Delet your post</button>
+                            </form>
+                        @endcan
                     </div>
-                
-                    <form method="POST" action="{{route('comments.storeMyComment',$post->id)}}">
-                        @csrf
-                        <div class="mb-3 mt-4">
-                            <textarea class="form-control" id="content" rows="3" name="content" placeholder="Your comment hier"></textarea>
-                            @if (session()->has('errorComment') && session()->get('id') == $post->id)
-                                <div class="alert alert-danger d-flex align-items-center mt-4" role="alert">
-                                    <div>
-                                        {{session()->get('errorComment')}}
-                                    </div>
-                                </div>
-                            @endif
-                        </div>
-                        <button class="btn btn-outline-primary" type="submit" id="submit">Add comment</button>
-                    </form>
+
+                    <div class="form-group">
+                        <label for="comment" class="form-label mt-4"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Comment</font></font></label>
+                        <textarea class="form-control" id="comment" rows="4"></textarea>
+                    </div>
+                    <button class="btn btn-outline-primary">Add comment</button>
                 </div>
+            </div>                
+            @empty
+                <div class="">list is empty</div>
+            @endforelse
 
+        </div>
+
+        <!--Side bar-->
+
+        <div class=" col-4">
+            <div class="card my-3">
+                <div class="card-body">
+                    <h4 class="card-title">Most Commented posts</h4>
+                </div>
+                <ul class="list-group list-group-flush">
+                    @forelse ($mostCommented as $post)
+                    <li class="list-group-item">
+                        <a href="#">{{$post->title}}</a>
+                        <div class="d-flex justify-content-between">
+                            <p>created by : {{$post->user->username}}</p>
+                            {{$post->comments_count}} comment(s)
+                        </div>
+                    </li>
+                    @empty
+                        <div>List is empty</div>                    
+                    @endforelse
+                </ul>
+            </div>
+
+            <div class="card my-3">
+                <div class="card-body">
+                    <h4 class="card-title">Most Active users</h4>
+                </div>
+                <ul class="list-group list-group-flush">
+                    @forelse ($mostActiveUser as $user)
+                        <li class="list-group-item">
+                            <p>{{$user->username}}</p>
+                            <div class="d-flex justify-content-between">
+                                <p>email : {{$user->email}}</p>
+                                {{$user->posts_count}} post(s)
+                            </div>
+                        </li>
+                    @empty
+                        <div>List is empty</div>                    
+                    @endforelse
+                </ul>
             </div>
         </div>
-        
-        @empty
-            <div class="alert alert-secondary" role="alert">
-                List Posts is empty @if($tab == 'index' )<a href="{{route('posts.create')}}" class="alert-link">Add new post.</a>@endif
-            </div>
-    @if (count($posts) > 0)
-        </div>
-    @endif
+    </div>
+    
+    
 
-    @endforelse
+
 @endsection

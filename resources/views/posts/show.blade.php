@@ -2,6 +2,7 @@
 
 @section('content')
     <h1>show post {{$post->title}}</h1>
+
     
     <div class="card">
         <div class="card-header">
@@ -10,7 +11,7 @@
         <div class="card-body">
             <h4 class="card-title">{{$post->title}}</h4>
             <p class="card-text">{{$post->content}}</p>
-            <em>created at {{$post->created_at->diffForhumans()}}</em>
+            <em>created at : {{$post->created_at->diffForhumans()}}</em>
         </div>
     </div>
     <div class="card mt-4">
@@ -18,16 +19,15 @@
           <h3><strong>Comments </strong></h3>
         </div>
     </div>
-    
-    @if (count($comments) > 0)
+    @if (count($post->comments) > 0)
         <div class="row row-cols-1 row-cols-md-2 g-4 mt-2">
     @endif
-        @forelse ($comments->all() as $comment)
+        @forelse ($post->comments->all() as $comment)
          <div class="col">
           <div class="card">
             <div class="card-body">
               <p class="card-text">{{$comment->content}}</p>
-              <em>create at : {{$comment->created_at->diffForHumans()}}</em>
+              <em>created at : {{$comment->created_at->diffForHumans()}}</em>
             </div>
             <div class="card-footer d-flex justify-content-between">
                 <div >
@@ -48,7 +48,7 @@
         </div>
         @endforelse
 
-    @if (count($comments) > 0)
+    @if (count($post->comments) > 0)
         </div>
     @endif
 
