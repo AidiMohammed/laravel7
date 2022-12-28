@@ -40,18 +40,13 @@
                     <br>
 
                     @if ($post->created_at->diffInHours() < 1)
-                        @component('partials.badge',['type' => 'success'])
-                            New
-                        @endcomponent
+                        <x-badge type='success'> New </x-badge>
                     @else
-                        @component('partials.badge',['type' => 'secondary'])
-                            Old
-                        @endcomponent                       
+                        <x-badge type='secondary'> Old</x-badge>
                     @endif
 
-                    @component('partials.badge',['type' => 'secondary'])
-                        created at {{$post->created_at}}
-                    @endcomponent
+                    <x-badge type='secondary'> created at {{$post->created_at}}</x-badge>
+                    
                 </div>
                 @auth           
                     <div class="card-footer">
