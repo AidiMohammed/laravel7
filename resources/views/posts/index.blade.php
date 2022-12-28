@@ -27,7 +27,7 @@
                             {{$post->title}}
                         @endif
                     </a>
-                    <button type="button" class="btn btn-primary position-relative ">
+                    <button type = "button" class = "btn btn-primary position-relative ">
                         comment(s)
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                             {{$post->comments_count}}
@@ -35,7 +35,9 @@
                     </button>
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title">Created by : {{$post->user->username}}</h5>
+
+                    <x-username :username="$post->user->username"></x-username>
+
                     <p class="card-text">{{$post->content}}</p>
                     <br>
 
@@ -45,7 +47,12 @@
                         <x-badge type='secondary'> Old</x-badge>
                     @endif
 
-                    <x-badge type='secondary'> created at {{$post->created_at}}</x-badge>
+                    <div class="d-inline">
+                        <x-created-updated :date='$post->created_at'> Crated at</x-created-updated>
+                        @if ($post->created_at != $post->updated_at)
+                            <x-created-updated :date='$post->updated_at'> Updated at</x-created-updated>
+                        @endif
+                    </div>
                     
                 </div>
                 @auth           
