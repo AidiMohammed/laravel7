@@ -18,7 +18,7 @@
             @forelse ($posts as $post)
             <div class="card my-3">
                 <div class="card-header d-flex justify-content-between">
-                    <a style="font-weight: bold;font-size: 30px" href="">{{$post->title}}</a>
+                    <a style="font-weight: bold;font-size: 30px" href="{{route('posts.show',$post->id)}}">{{$post->title}}</a>
                     <button type="button" class="btn btn-primary position-relative ">
                         comment(s)
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
@@ -35,16 +35,39 @@
                 <div class="card-footer">
                     
                     <div class="d-flex justify-content-between">
-                        @can('update', $post)
-                            <a class="btn btn-secondary" href="{{route('posts.edit',$post->id)}}">Edit your post</a>
-                        @endcan
+                        <div>
+                            @can('update', $post)
+                                <a class="btn btn-secondary" href="{{route('posts.edit',$post->id)}}">Edit your post</a>
+                            @endcan
+                            @can('restore', $post)
+                                @if ($post->deleted_at)
+                                    <form class="d-inline" action="{{route('post.restore',$post->id)}}" method="POST">
+                                        @csrf
+                                        @method('PATCH')
+                                        <input type="submit" class="btn btn-success" value="Restore">
+                                    </form>
+                                @endif
+                            @endcan
+                        </div>
+                        
+
                         @can('delete', $post)
-                            <form action="{{route('posts.destroy',$post->id)}}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger">Delet your post</button>
-                            </form>
+                            @if ($post->deleted_at === null)
+                                <form action="{{route('posts.destroy',$post->id)}}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger">Delet your post</button>
+                                </form>                            
+                            @else
+                                <form action="{{route('posts.destroy',$post->id)}}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger">Force delet </button>
+                                </form>       
+                            @endif
+
                         @endcan
+
                     </div>
 
                     <div class="form-group">
@@ -61,49 +84,48 @@
         </div>
 
         <!--Side bar-->
-
-        <div class=" col-4">
-            <div class="card my-3">
-                <div class="card-body">
-                    <h4 class="card-title">Most Commented posts</h4>
-                </div>
-                <ul class="list-group list-group-flush">
-                    @forelse ($mostCommented as $post)
-                    <li class="list-group-item">
-                        <a href="#">{{$post->title}}</a>
-                        <div class="d-flex justify-content-between">
-                            <p>created by : {{$post->user->username}}</p>
-                            {{$post->comments_count}} comment(s)
-                        </div>
-                    </li>
-                    @empty
-                        <div>List is empty</div>                    
-                    @endforelse
-                </ul>
-            </div>
-
-            <div class="card my-3">
-                <div class="card-body">
-                    <h4 class="card-title">Most Active users</h4>
-                </div>
-                <ul class="list-group list-group-flush">
-                    @forelse ($mostActiveUser as $user)
+        @if ($tab === 'index')
+            <div class=" col-4">
+                <div class="card my-3">
+                    <div class="card-body">
+                        <h4 class="card-title">Most Commented posts</h4>
+                    </div>
+                
+                    <ul class="list-group list-group-flush">
+                        @forelse ($mostCommented as $post)
                         <li class="list-group-item">
-                            <p>{{$user->username}}</p>
+                            <a href="#">{{$post->title}}</a>
                             <div class="d-flex justify-content-between">
-                                <p>email : {{$user->email}}</p>
-                                {{$user->posts_count}} post(s)
+                                <p>created by : {{$post->user->username}}</p>
+                                {{$post->comments_count}} comment(s)
                             </div>
                         </li>
-                    @empty
+                        @empty
                         <div>List is empty</div>                    
-                    @endforelse
-                </ul>
-            </div>
-        </div>
-    </div>
-    
-    
+                        @endforelse
+                    </ul>
+                </div>
 
+                <div class="card my-3">
+                    <div class="card-body">
+                        <h4 class="card-title">Most Active users</h4>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        @forelse ($mostActiveUser as $user)
+                            <li class="list-group-item">
+                                <p>{{$user->username}}</p>
+                                <div class="d-flex justify-content-between">
+                                    <p>email : {{$user->email}}</p>
+                                    {{$user->posts_count}} post(s)
+                                </div>
+                            </li>
+                        @empty
+                            <div>List is empty</div>                    
+                        @endforelse
+                    </ul>
+                </div>
+            </div>
+        @endif
+    </div>
 
 @endsection

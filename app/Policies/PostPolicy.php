@@ -47,7 +47,7 @@ class PostPolicy
 
     public function edit(User $user,Post $post)
     {
-        if($user->id === $post->user_id || $user->is_admin)
+        if($user->id === $post->user_id )
         return true;
     }
 
@@ -60,7 +60,7 @@ class PostPolicy
      */
     public function update(User $user, Post $post)
     {
-        if($user->id === $post->user_id || $user->is_admin)
+        if($user->id === $post->user_id )
         return true;
     }
 
@@ -73,7 +73,7 @@ class PostPolicy
      */
     public function delete(User $user, Post $post)
     {
-        if($user->id === $post->user_id || $user->is_admin)
+        if($user->id === $post->user_id)
             return true;
     }
 
@@ -86,7 +86,7 @@ class PostPolicy
      */
     public function restore(User $user, Post $post)
     {
-        if($user->id === $post->user_id || $user->is_admin)
+        if($user->id === $post->user_id )
             return true;
     }
 

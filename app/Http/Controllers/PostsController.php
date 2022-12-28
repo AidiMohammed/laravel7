@@ -12,7 +12,7 @@ class PostsController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth')->except(['index','show','all','archive']);
+        $this->middleware('auth')->except(['index','show']);
     }
 
     /**
@@ -29,6 +29,7 @@ class PostsController extends Controller
         $archiveCount = Post::onlyTrashed()->get();
         $allCount = Post::withTrashed()->get();
         $indexCount = Post::withoutTrashed()->get();
+
         return view('posts.index',[
             'posts' => $posts,
             'index' => 0,
@@ -56,7 +57,12 @@ class PostsController extends Controller
         $archiveCount = Post::onlyTrashed()->get();
         $allCount = Post::withTrashed()->get();
         $indexCount = Post::withoutTrashed()->get();
-        return view('posts.index',['posts' => $posts,'tab' => 'all','archiveCount' => $archiveCount->count() , 'allCount'=> $allCount->count(), 'indexCount' => $indexCount->count()]);
+        return view('posts.index',[
+            'posts' => $posts,
+            'tab' => 'all',
+            'archiveCount' => $archiveCount->count(),
+            'allCount'=> $allCount->count(),
+            'indexCount' => $indexCount->count()]);
     }
 
     /**
@@ -110,7 +116,22 @@ class PostsController extends Controller
      */
     public function edit($id)
     {
-        $post = Post::findOrFail($id);
+        //$post = Post::findOrFail($id);
+        $posts = Post::withTrashed()->get();
+        $myPost = null;
+
+        foreach($posts as $post)
+        {
+            if($post->id == $id)
+            {
+                $myPost = $post;
+                break;
+            }
+        }
+
+        if($myPost === null)
+            abort(404);
+        
 
         $this->authorize('edit',$post);
 
@@ -126,8 +147,21 @@ class PostsController extends Controller
      */
     public function update(PostStore $request, $id)
     {
-        $post = Post::findOrFail($id);
+        $posts = Post::withTrashed()->get();
+        $myPost = null;
 
+        foreach($posts as $post)
+        {
+            if($post->id == $id)
+            {
+                $myPost = $post;
+                break;
+            }
+        }
+
+        if($myPost === null)
+            abort(404);
+            
         $this->authorize('update',$post);
         //if(Gate::denies('post.update',$post)) abort(403,"You can't edit this post !");
 
@@ -174,8 +208,9 @@ class PostsController extends Controller
         $post = Post::onlyTrashed()->where('id',$id)->first();
 
         $this->authorize('restore',$post);
-
         $post->restore();
+
+        session()->flash('status','The post <strong> '.$post->title.'</strong> has ben restored !! ');
         return redirect()->back();
     }
 }

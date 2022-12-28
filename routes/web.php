@@ -23,7 +23,7 @@ route::post('/factories/create/posts','FactoryController@createPosts')->name('fa
 
 Route::get('/posts/archive','PostsController@archive')->middleware('can:isAdmin');
 Route::get('/posts/all','PostsController@all')->middleware('can:isAdmin');
-Route::patch('/posts/{id}/restore','PostsController@restore');
+Route::patch('/posts/{id}/restore','PostsController@restore')->name('post.restore');
 Route::delete('/posts/{id}/forceDelete','PostsController@forceDelete');
 
 Route::resource('posts','PostsController');

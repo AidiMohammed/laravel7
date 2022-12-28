@@ -37,7 +37,6 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('isAdmin',function($user){
             if($user->is_admin)
             {
-                dd('je suis la');
                 redirect()->back();
                 return true;
             }
@@ -73,7 +72,7 @@ class AuthServiceProvider extends ServiceProvider
 
        Gate::before(function($user,$ability)
         {
-            if($user->is_admin && in_array($ability,['delete','edit','update','forceDelete','create']))
+            if($user->is_admin && in_array($ability,['delete','edit','update','forceDelete','create','restore']))
                 return true;
         });
     }
