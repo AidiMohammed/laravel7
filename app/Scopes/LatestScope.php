@@ -18,7 +18,6 @@ class LatestScope implements Scope
      */
     public function apply(Builder $builder, Model $model)
     {
-        if(Auth::check() && Auth::user()->is_admin)
-            $builder->orderBy('created_at','asc');
+        $builder->orderBy('created_at','desc');
     }
 }

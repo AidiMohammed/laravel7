@@ -38,7 +38,20 @@
                     <h5 class="card-title">Created by : {{$post->user->username}}</h5>
                     <p class="card-text">{{$post->content}}</p>
                     <br>
-                    <span class="badge bg-secondary text-light p-2">created at {{$post->created_at}}</span>
+
+                    @if ($post->created_at->diffInHours() < 1)
+                        @component('partials.badge',['type' => 'success'])
+                            New
+                        @endcomponent
+                    @else
+                        @component('partials.badge',['type' => 'secondary'])
+                            Old
+                        @endcomponent                       
+                    @endif
+
+                    @component('partials.badge',['type' => 'secondary'])
+                        created at {{$post->created_at}}
+                    @endcomponent
                 </div>
                 @auth           
                     <div class="card-footer">
