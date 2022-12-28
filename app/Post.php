@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Post extends Model
 {
 
-    use SoftDeletes;//add deleted_at to posts tabel avec la method softDeletes() 
+    use SoftDeletes;//add deleted_at to posts tabel avec la method softDeletes() via file migration
 
     protected $fillable = ['title','content','active','user_id'];
 
@@ -31,6 +31,7 @@ class Post extends Model
 
     public static function boot()
     {
+        //ajouter des scope Global avent le boot "SoftDeletes"
         parent::boot();
 
         static::addGlobalScope(new LatestScope);

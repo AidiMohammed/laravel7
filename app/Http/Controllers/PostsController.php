@@ -26,6 +26,7 @@ class PostsController extends Controller
         $posts = Post::withCount('comments')->get();//I use Scope For Model Post with orderBy desc
         $postMostCommented = Post::mostCommented()->take(5)->get();
         $mostActiveUser = User::MostActiveUser()->take(5)->get();
+        $userActiveLastMonths = User::mostActiveUsersLastMonth()->take(5)->get();
         $archiveCount = Post::onlyTrashed()->get();
         $allCount = Post::withTrashed()->get();
         $indexCount = Post::withoutTrashed()->get();
@@ -37,6 +38,7 @@ class PostsController extends Controller
             'archiveCount' => $archiveCount->count() ,
             'mostCommented' => $postMostCommented ,
             'mostActiveUser' => $mostActiveUser,
+            'userAvtiveLastMonth' => $userActiveLastMonths,
             'allCount'=> $allCount->count(), 
             'indexCount' => $indexCount->count()]);
     }

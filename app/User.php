@@ -52,4 +52,11 @@ class User extends Authenticatable
     {
         return $builder->withCount('posts')->orderBy('posts_count','desc');
     }
+
+    public function scopeMostActiveUsersLastMonth(Builder $builder)
+    {
+        return $builder->withCount(['posts' => function(Builder $builder){
+            $builder->whereBetween(static::CREATED_AT,[now()->subMonth(1),now()]);
+        }])->orderBy('posts_count','desc');
+    }
 }

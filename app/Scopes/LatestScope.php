@@ -5,6 +5,7 @@ namespace App\Scopes;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
+use Illuminate\Support\Facades\Auth;
 
 class LatestScope implements Scope
 {
@@ -17,6 +18,7 @@ class LatestScope implements Scope
      */
     public function apply(Builder $builder, Model $model)
     {
-        $builder->orderBy('created_at','asc');
+        if(Auth::check() && Auth::user()->is_admin)
+            $builder->orderBy('created_at','asc');
     }
 }

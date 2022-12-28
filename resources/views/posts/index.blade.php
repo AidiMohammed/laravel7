@@ -18,7 +18,15 @@
             @forelse ($posts as $post)
             <div class="card my-3">
                 <div class="card-header d-flex justify-content-between">
-                    <a style="font-weight: bold;font-size: 30px" href="{{route('posts.show',$post->id)}}">{{$post->title}}</a>
+                    <a style="font-weight: bold;font-size: 30px" href="{{route('posts.show',$post->id)}}">
+                        @if ($post->trashed() && $tab != 'archive')
+                            <del>
+                                {{$post->title}}
+                            </del>
+                        @else
+                            {{$post->title}}
+                        @endif
+                    </a>
                     <button type="button" class="btn btn-primary position-relative ">
                         comment(s)
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
@@ -32,50 +40,52 @@
                     <br>
                     <span class="badge bg-secondary text-light p-2">created at {{$post->created_at}}</span>
                 </div>
-                <div class="card-footer">
-                    
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            @can('update', $post)
-                                <a class="btn btn-secondary" href="{{route('posts.edit',$post->id)}}">Edit your post</a>
-                            @endcan
-                            @can('restore', $post)
-                                @if ($post->deleted_at)
-                                    <form class="d-inline" action="{{route('post.restore',$post->id)}}" method="POST">
-                                        @csrf
-                                        @method('PATCH')
-                                        <input type="submit" class="btn btn-success" value="Restore">
-                                    </form>
-                                @endif
-                            @endcan
-                        </div>
+                @auth           
+                    <div class="card-footer">
                         
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                @can('update', $post)
+                                    <a class="btn btn-secondary" href="{{route('posts.edit',$post->id)}}">Edit your post</a>
+                                @endcan
+                                @can('restore', $post)
+                                    @if ($post->deleted_at)
+                                        <form class="d-inline" action="{{route('post.restore',$post->id)}}" method="POST">
+                                            @csrf
+                                            @method('PATCH')
+                                            <input type="submit" class="btn btn-success" value="Restore">
+                                        </form>
+                                    @endif
+                                @endcan
+                            </div>
+                            
 
-                        @can('delete', $post)
-                            @if ($post->deleted_at === null)
-                                <form action="{{route('posts.destroy',$post->id)}}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger">Delet your post</button>
-                                </form>                            
-                            @else
-                                <form action="{{route('posts.destroy',$post->id)}}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger">Force delet </button>
-                                </form>       
-                            @endif
+                            @can('delete', $post)
+                                @if ($post->deleted_at === null)
+                                    <form action="{{route('posts.destroy',$post->id)}}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger">Delet your post</button>
+                                    </form>                            
+                                @else
+                                    <form action="{{route('posts.destroy',$post->id)}}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger">Force delet </button>
+                                    </form>       
+                                @endif
 
-                        @endcan
+                            @endcan
 
+                        </div>
+
+                        <div class="form-group">
+                            <label for="comment" class="form-label mt-4"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Comment</font></font></label>
+                            <textarea class="form-control" id="comment" rows="4"></textarea>
+                        </div>
+                        <button class="btn btn-outline-primary">Add comment</button>
                     </div>
-
-                    <div class="form-group">
-                        <label for="comment" class="form-label mt-4"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Comment</font></font></label>
-                        <textarea class="form-control" id="comment" rows="4"></textarea>
-                    </div>
-                    <button class="btn btn-outline-primary">Add comment</button>
-                </div>
+                @endauth
             </div>                
             @empty
                 <div class="">list is empty</div>
@@ -121,6 +131,21 @@
                             </li>
                         @empty
                             <div>List is empty</div>                    
+                        @endforelse
+                    </ul>
+                </div>
+
+                <div class="card my-3">
+                    <div class="card-body">
+                        <h4 class="card-title">User active last month</h4>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        @forelse ($userAvtiveLastMonth as $user)
+                            <li class="list-group-item">
+                                <p><span class="badge badge-info ">{{$user->posts_count}} </span> {{$user->username}}</p>
+                            </li>
+                        @empty
+                            
                         @endforelse
                     </ul>
                 </div>
