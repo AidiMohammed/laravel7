@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\PostStore;
-use Illuminate\Support\Facades\Gate;
 use App\Post;
 use App\User;
 
@@ -23,24 +23,59 @@ class PostsController extends Controller
     public function index()
     {
         
-        $posts = Post::withCount('comments')->get();//I use Scope For Model Post with orderBy desc
-        $postMostCommented = Post::mostCommented()->take(5)->get();
-        $mostActiveUser = User::MostActiveUser()->take(5)->get();
-        $userActiveLastMonths = User::mostActiveUsersLastMonth()->take(5)->get();
-        $archiveCount = Post::onlyTrashed()->get();
-        $allCount = Post::withTrashed()->get();
-        $indexCount = Post::withoutTrashed()->get();
+        $postMostCommented = Cache::remember('postMostCommented',now()->addSeconds(10),function(){
+            return Post::mostCommented()->take(5)->get();
+        });
+        $mostActiveUser = Cache::remember('mostActiveUser',now()->addSeconds(10),function(){
+            return User::MostActiveUser()->take(5)->get();
+        });
+        $userActiveLastMonths = Cache::remember('userActiveLastMonths',now()->addSeconds(10),function(){
+            return User::mostActiveUsersLastMonth()->take(5)->get();
+        });
+        
 
-        return view('posts.index',[
-            'posts' => $posts,
-            'index' => 0,
-            'tab' => 'index',
-            'archiveCount' => $archiveCount->count() ,
-            'mostCommented' => $postMostCommented ,
-            'mostActiveUser' => $mostActiveUser,
-            'userAvtiveLastMonth' => $userActiveLastMonths,
-            'allCount'=> $allCount->count(), 
-            'indexCount' => $indexCount->count()]);
+        $posts = Post::withCount('comments')->with('user')->get();//I use Scope For Model Post with orderBy desc
+
+        if(Auth::check())
+        {
+            if(Auth::user()->is_admine)
+            {
+                $archiveCount = Post::onlyTrashed()->get();
+                $allCount = Post::withTrashed()->get();
+                $indexCount = Post::withoutTrashed()->get();
+                
+                return view('posts.index',[
+                    'posts' => $posts,
+                    'tab' => 'index',
+                    'mostCommented' => $postMostCommented ,
+                    'mostActiveUser' => $mostActiveUser,
+                    'userAvtiveLastMonth' => $userActiveLastMonths,
+                    'archiveCount' => $archiveCount->count() ,
+                    'allCount'=> $allCount->count(), 
+                    'indexCount' => $indexCount->count()]);
+            }
+            else
+            {
+                return view('posts.index',[
+                    'posts' => $posts,
+                    'tab' => 'index',
+                    'mostCommented' => $postMostCommented ,
+                    'mostActiveUser' => $mostActiveUser,
+                    'userAvtiveLastMonth' => $userActiveLastMonths]);
+            }
+        }
+        else
+        {
+            return view('posts.index',[
+                'posts' => $posts,
+                'tab' => 'index',
+                'mostCommented' => $postMostCommented ,
+                'mostActiveUser' => $mostActiveUser,
+                'userAvtiveLastMonth' => $userActiveLastMonths]);
+        }
+
+
+
     }
 
     public function archive()
@@ -50,7 +85,12 @@ class PostsController extends Controller
         $archiveCount = Post::onlyTrashed()->get();
         $allCount = Post::withTrashed()->get();
         $indexCount = Post::withoutTrashed()->get();
-        return view('posts.index',['posts' => $posts,'tab' => 'archive','archiveCount' => $archiveCount->count() , 'allCount'=> $allCount->count(), 'indexCount' => $indexCount->count()]);
+        return view('posts.index',[
+            'posts' => $posts,
+            'tab' => 'archive',
+            'archiveCount' => $archiveCount->count() ,
+            'allCount'=> $allCount->count(),
+            'indexCount' => $indexCount->count()]);
     }
 
     public function all()
@@ -107,7 +147,26 @@ class PostsController extends Controller
      */
     public function show($id)
     {
-        return view('posts.show',['post' => Post::with('comments')->findOrFail($id)]);
+        $posts = Post::with('comments')->withTrashed()->get();
+        //Post::trashedWithComments($id);
+        $myPost= null;
+
+        foreach ($posts as $post)
+        {
+            if($post->id == $id)
+            {
+                $myPost = $post;
+                break;
+            }
+        }
+
+        if($myPost == null)
+            abort(404,'Post not fund !!');
+
+        if($post->deleted_at != null)
+            abort(404);
+
+        return view('posts.show',['post' => $myPost]);
     }
 
     /**
@@ -119,7 +178,8 @@ class PostsController extends Controller
     public function edit($id)
     {
         //$post = Post::findOrFail($id);
-        $posts = Post::withTrashed()->get();
+        $posts = Post::with('comments')->withTrashed()->get();
+
         $myPost = null;
 
         foreach($posts as $post)
@@ -133,11 +193,10 @@ class PostsController extends Controller
 
         if($myPost === null)
             abort(404);
-        
 
-        $this->authorize('edit',$post);
+        $this->authorize('edit',$myPost);
 
-        return view('posts.edit',['post' => $post]);
+        return view('posts.edit',['post' => $myPost]);
     }
 
     /**

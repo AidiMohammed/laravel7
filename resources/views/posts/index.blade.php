@@ -150,20 +150,15 @@
                     </ul>
                 </div>
 
-                <div class="card my-3">
-                    <div class="card-body">
-                        <h4 class="card-title">User active last month</h4>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        @forelse ($userAvtiveLastMonth as $user)
-                            <li class="list-group-item">
-                                <p><span class="badge badge-info ">{{$user->posts_count}} </span> {{$user->username}}</p>
-                            </li>
-                        @empty
-                            
-                        @endforelse
-                    </ul>
-                </div>
+                <x-card
+                    title="Most Active users"
+                    :items="collect($mostActiveUser)"></x-card>
+
+                <x-card
+                    title="User Active"
+                    text="User active in last month"
+                    :items="collect($userAvtiveLastMonth)"></x-card>
+
             </div>
         @endif
     </div>
