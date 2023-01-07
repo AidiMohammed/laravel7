@@ -38,12 +38,12 @@ class PostsController extends Controller
 
         if(Auth::check())
         {
-            if(Auth::user()->is_admine)
+            if(Auth::user()->is_admin)
             {
                 $archiveCount = Post::onlyTrashed()->get();
                 $allCount = Post::withTrashed()->get();
                 $indexCount = Post::withoutTrashed()->get();
-                
+                 
                 return view('posts.index',[
                     'posts' => $posts,
                     'tab' => 'index',
@@ -147,7 +147,11 @@ class PostsController extends Controller
      */
     public function show($id)
     {
-        $posts = Post::with('comments')->withTrashed()->get();
+
+        $posts = Cache::remember("show-post-{$id}",now()->addSeconds(60),function()
+        {
+            return Post::with('comments')->withTrashed()->get();
+        });
         //Post::trashedWithComments($id);
         $myPost= null;
 
@@ -166,6 +170,7 @@ class PostsController extends Controller
         if($post->deleted_at != null)
             abort(404);
 
+    
         return view('posts.show',['post' => $myPost]);
     }
 

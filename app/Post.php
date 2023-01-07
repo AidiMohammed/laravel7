@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Scopes\LatestScope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Cache;
 
 class Post extends Model
 {
@@ -38,6 +39,10 @@ class Post extends Model
 
         static::deleting(function($post){
             $post->comments()->delete();
+        });
+
+        static::updating(function($post){
+            Cache::forget("show-post-{$post->id}");
         });
 
         static::restoring(function($post){
