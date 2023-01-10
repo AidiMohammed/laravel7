@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Cache;
 class Post extends Model
 {
 
-    use SoftDeletes;//add deleted_at to posts tabel avec la method softDeletes() via file migration
+    use SoftDeletes;//add deleted_at to posts tabel avec la method softDeletes() via ficher de migration
 
     protected $fillable = ['title','content','active','user_id'];
 
@@ -29,6 +29,11 @@ class Post extends Model
     {
         return $builder->withCount('comments')->orderBy('comments_count','desc');
     }    
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class)->withTimestamps();
+    }
 
     public static function boot()
     {

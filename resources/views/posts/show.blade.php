@@ -10,6 +10,10 @@
         </div>
         <div class="card-body">
             <h4 class="card-title">{{$post->title}}</h4>
+
+            <x-tag :tags="$post->tags"></x-tag>
+            <hr>
+
             <p class="card-text">{{$post->content}}</p>
             <em>created at : {{$post->created_at->diffForhumans()}}</em>
         </div>

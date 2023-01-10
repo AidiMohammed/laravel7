@@ -38,6 +38,9 @@
 
                     <x-username :username="$post->user->username"></x-username>
 
+                    <x-tag :tags="$post->tags"></x-tag>
+                    <hr>
+
                     <p class="card-text">{{$post->content}}</p>
                     <br>
 
