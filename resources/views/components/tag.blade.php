@@ -1,3 +1,3 @@
 @foreach ($tags as $tag)
-    <x-badge type='success'>{{$tag->name}}</x-badge>
+    <a href="{{route('posts.tag.index',['tag' => $tag->id])}}"><x-badge type='success'>{{$tag->name}}</x-badge></a>
 @endforeach

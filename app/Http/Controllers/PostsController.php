@@ -150,7 +150,7 @@ class PostsController extends Controller
 
         $posts = Cache::remember("show-post-{$id}",now()->addSeconds(60),function()
         {
-            return Post::with('comments')->withTrashed()->get();
+            return Post::with(['comments','tags','user'])->withTrashed()->get();
         });
         //Post::trashedWithComments($id);
         $myPost= null;

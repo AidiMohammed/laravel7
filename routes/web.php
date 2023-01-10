@@ -21,6 +21,8 @@ route::view('/factories','factories.create')->name('factories')->middleware('can
 route::get('/secret','HomeController@secret')->name('secret')->middleware('can:secret.page');
 route::post('/factories/create/posts','FactoryController@createPosts')->name('factories.storePosts');
 
+route::get('/posts/tags/{tag}' , 'TagController@index')->name('posts.tag.index');
+
 Route::get('/posts/archive','PostsController@archive')->middleware('can:isAdmin');
 Route::get('/posts/all','PostsController@all')->middleware('can:isAdmin');
 Route::patch('/posts/{id}/restore','PostsController@restore')->name('post.restore');
