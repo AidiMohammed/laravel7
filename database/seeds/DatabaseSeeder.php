@@ -16,6 +16,12 @@ class DatabaseSeeder extends Seeder
             $this->command->call('migrate:refresh');
             $this->command->info('database was refreshed !');
         }
-        $this->call([UsersTableSeeder::class,PostsTableSeeder::class,CommentsTableSeeder::class]);
+        $this->call([
+            UsersTableSeeder::class,
+            PostsTableSeeder::class,
+            CommentsTableSeeder::class,
+            TagTableSeeder::class,
+            PostTagTableSeeder::class
+        ]);
     }
 }
