@@ -11,12 +11,8 @@ class TagController extends Controller
     {
         $tag = Tag::findOrFail($id);
 
-
         return view('posts.index',[
             'posts' => $tag->posts()->get(),
-            'mostCommented' => [],
-            'mostActiveUser' => [],
-            'userAvtiveLastMonth' => [],
             'tab' => 'index'
         ]);
     }

@@ -22,18 +22,7 @@ class PostsController extends Controller
      */
     public function index()
     {
-        
-        $postMostCommented = Cache::remember('postMostCommented',now()->addSeconds(10),function(){
-            return Post::mostCommented()->take(5)->get();
-        });
-        $mostActiveUser = Cache::remember('mostActiveUser',now()->addSeconds(10),function(){
-            return User::MostActiveUser()->take(5)->get();
-        });
-        $userActiveLastMonths = Cache::remember('userActiveLastMonths',now()->addSeconds(10),function(){
-            return User::mostActiveUsersLastMonth()->take(5)->get();
-        });
-        
-
+    
         $posts = Post::withCount('comments')->with('user')->get();//I use Scope For Model Post with orderBy desc
 
         if(Auth::check())
@@ -47,9 +36,6 @@ class PostsController extends Controller
                 return view('posts.index',[
                     'posts' => $posts,
                     'tab' => 'index',
-                    'mostCommented' => $postMostCommented ,
-                    'mostActiveUser' => $mostActiveUser,
-                    'userAvtiveLastMonth' => $userActiveLastMonths,
                     'archiveCount' => $archiveCount->count() ,
                     'allCount'=> $allCount->count(), 
                     'indexCount' => $indexCount->count()]);
@@ -58,20 +44,14 @@ class PostsController extends Controller
             {
                 return view('posts.index',[
                     'posts' => $posts,
-                    'tab' => 'index',
-                    'mostCommented' => $postMostCommented ,
-                    'mostActiveUser' => $mostActiveUser,
-                    'userAvtiveLastMonth' => $userActiveLastMonths]);
+                    'tab' => 'index',]);
             }
         }
         else
         {
             return view('posts.index',[
                 'posts' => $posts,
-                'tab' => 'index',
-                'mostCommented' => $postMostCommented ,
-                'mostActiveUser' => $mostActiveUser,
-                'userAvtiveLastMonth' => $userActiveLastMonths]);
+                'tab' => 'index',]);
         }
 
 
@@ -150,7 +130,7 @@ class PostsController extends Controller
 
         $posts = Cache::remember("show-post-{$id}",now()->addSeconds(60),function()
         {
-            return Post::with(['comments','tags','user'])->withTrashed()->get();
+            return Post::withTrashed()->get();
         });
         //Post::trashedWithComments($id);
         $myPost= null;
