@@ -23,6 +23,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        view()->composer('posts.index','App\Http\ViewComposers\ActivityComposer');
+        view()->composer('posts.sidebar','App\Http\ViewComposers\ActivityComposer');
     }
 }
