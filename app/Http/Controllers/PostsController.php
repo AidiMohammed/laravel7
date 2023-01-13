@@ -58,9 +58,6 @@ class PostsController extends Controller
                 'posts' => $posts,
                 'tab' => 'index',]);
         }
-
-
-
     }
 
     public function archive()
@@ -122,12 +119,15 @@ class PostsController extends Controller
 
             $lastOne = DB::table('posts')->latest('id')->first();
 
-            $file->store('thumbnails');//uploadfile
+           /* $file->store('thumbnails');//uploadfile
             dump(Storage::putFile('posts/thumbnails',$file));
-            dump(Storage::disk('public')->putFile('posts/thumbnails',$file));
+            dump(Storage::disk('public')->putFile('posts/thumbnails',$file));*/
 
-            dump($file->storeAs('posts/thumbnails',random_int(1,1000).'.'.$file->guessExtension()));
-            dump(Storage::disk('public')->putFileAs('posts/thumbnails',$file,random_int(1,3000).'.'.$file->guessExtension()));
+            $name1 = $file->storeAs('thumbnails',random_int(1,1000).'.'.$file->guessExtension());
+            $name2 = Storage::disk('public')->putFileAs('thumbnails',$file,random_int(1,3000).'.'.$file->guessExtension());
+
+            dump(Storage::url($name1));
+            dump(Storage::disk('public')->url($name2));
         }
 
         die();
