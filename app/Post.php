@@ -31,6 +31,11 @@ class Post extends Model
         return $this->belongsToMany(Tag::class)->withTimestamps();
     }
 
+    public function image()
+    {
+        return $this->hasOne(Image::class);
+    }
+
     //----------------- scope --------------------------//
     public function scopeMostCommented(Builder $builder)
     {
@@ -42,7 +47,7 @@ class Post extends Model
         //ajouter des scope Global avent le boot "SoftDeletes"
         parent::boot();
 
-        //static::addGlobalScope(new LatestScope);
+        static::addGlobalScope(new LatestScope);
 
         static::deleting(function($post){
             $post->comments()->delete();

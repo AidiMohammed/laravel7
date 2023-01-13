@@ -5,10 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\PostStore;
+use App\Image;
 use App\Post;
-use App\User;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
+
 
 class PostsController extends Controller
 {
@@ -107,7 +106,7 @@ class PostsController extends Controller
      */
     public function store(PostStore $request)
     {
-        $hasfile = $request->hasFile('picture');
+        /*$hasfile = $request->hasFile('picture');
         dump($hasfile);
         if($hasfile)
         {
@@ -119,18 +118,16 @@ class PostsController extends Controller
 
             $lastOne = DB::table('posts')->latest('id')->first();
 
-           /* $file->store('thumbnails');//uploadfile
+            $file->store('thumbnails');//uploadfile
             dump(Storage::putFile('posts/thumbnails',$file));
-            dump(Storage::disk('public')->putFile('posts/thumbnails',$file));*/
+            dump(Storage::disk('public')->putFile('posts/thumbnails',$file));
 
             $name1 = $file->storeAs('thumbnails',random_int(1,1000).'.'.$file->guessExtension());
             $name2 = Storage::disk('public')->putFileAs('thumbnails',$file,random_int(1,3000).'.'.$file->guessExtension());
 
             dump(Storage::url($name1));
             dump(Storage::disk('public')->url($name2));
-        }
-
-        die();
+        }*/
 
         $newPost = new Post();
         $data = request()->only(['title','content']);
@@ -138,7 +135,16 @@ class PostsController extends Controller
         $data['active'] = false;
         $data['user_id'] = Auth::id();//request->user()->id
 
-        $newPost->create($data);
+        $post = $newPost->create($data);
+
+        //upload picture for this post
+        if($request->hasFile('picture'))
+        {
+            $path = $request->file('picture')->store('posts');
+            $image = new Image(['path' => $path]);
+
+            $post->image()->save($image);
+        }
 
         session()->flash('status','The post has ben created !!');
 
