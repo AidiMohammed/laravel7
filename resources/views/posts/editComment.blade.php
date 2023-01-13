@@ -4,7 +4,7 @@
     <h1>Edit Comment</h1>
 
 
-    <form method="POST" action="{{route('comment.update', ['comment' => $comment->id])}}">
+    <form method="POST" action="{{route('comment.update', ['comment' => $comment->id])}}" >
         @csrf
         @method('PUT')
         <div class="form-group">

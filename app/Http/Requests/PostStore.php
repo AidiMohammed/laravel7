@@ -26,6 +26,7 @@ class PostStore extends FormRequest
         return [
             'title' => 'bail|required|min:4|max:35',
             'content' => 'required',
+            'picture' => 'image|max:2048|mimes:jpeg,jpg,png',
         ];
     }
 }

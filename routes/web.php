@@ -26,7 +26,7 @@ route::get('/posts/tags/{tag}' , 'TagController@index')->name('posts.tag.index')
 Route::get('/posts/archive','PostsController@archive')->middleware('can:isAdmin');
 Route::get('/posts/all','PostsController@all')->middleware('can:isAdmin');
 Route::patch('/posts/{id}/restore','PostsController@restore')->name('post.restore');
-Route::delete('/posts/{id}/forceDelete','PostsController@forceDelete');
+Route::delete('/posts/{id}/forceDelete','PostsController@forceDelete')->name('posts.forceDelete');
 
 Route::resource('posts','PostsController');
 Route::resource('comment','CommentController')->only(['destroy','edit','update']);

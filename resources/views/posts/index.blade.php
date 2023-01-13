@@ -44,7 +44,7 @@
                 <div class="card-body">
 
                     @if ($post->image)
-                        <img src="{{$post->image->url()}}" class="card-img mb-4" alt="image post {{$post->title}}">
+                        <img src="{{$post->image->url()}}" class="card-img mb-4" alt="image post {{$post->title}}" height="820" width="820">
                     @endif
                     <x-username :username="$post->user->username"></x-username>
 
@@ -96,7 +96,7 @@
                                         <button type="submit" class="btn btn-danger">Delet your post</button>
                                     </form>                            
                                 @else
-                                    <form action="{{route('posts.destroy',$post->id)}}" method="POST">
+                                    <form action="{{route('posts.forceDelete',$post->id)}}" method="POST">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger">Force delet </button>

@@ -244,8 +244,12 @@ class PostsController extends Controller
             }
             else
             {
-                $post->image->save(Image::create(['path' => $path]));
-            
+                
+                //$post->image->update(Image::create(['path' => $path]));
+                $image = new Image();
+                $image->path = $path;
+                $image->post_id = $post->id;
+                $image->save();
             }
         }
 
@@ -280,6 +284,7 @@ class PostsController extends Controller
     public function forceDelete($id)
     {
         $post = Post::onlyTrashed($id)->where('id',$id)->first();
+
 
         $this->authorize('forceDelete',$post);
 
