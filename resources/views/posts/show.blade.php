@@ -9,7 +9,11 @@
                 <div class="card-header">
                     {{$post->title}}
                 </div>
+
                 <div class="card-body">
+                    @if ($post->image)
+                        <img src="{{$post->image->url()}}" class="card-img fluid mb-4" alt="image {{$post->title}}">
+                    @endif
                     <h4 class="card-title">{{$post->title}}</h4>
         
                     <x-tag :tags="$post->tags"></x-tag>

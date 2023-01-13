@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\PostStore;
 use App\Image;
 use App\Post;
-
+use Illuminate\Support\Facades\Storage;
 
 class PostsController extends Controller
 {
@@ -225,23 +225,29 @@ class PostsController extends Controller
      */
     public function update(PostStore $request, $id)
     {
-        $posts = Post::withTrashed()->get();
-        $myPost = null;
-
-        foreach($posts as $post)
-        {
-            if($post->id == $id)
-            {
-                $myPost = $post;
-                break;
-            }
-        }
-
-        if($myPost === null)
-            abort(404);
+        $post = Post::getPost($id);
             
         $this->authorize('update',$post);
-        //if(Gate::denies('post.update',$post)) abort(403,"You can't edit this post !");
+
+        if($request->hasFile('picture'))
+        {
+            //upload picture 
+            $path = $request->file('picture')->store('posts');
+            if($post->image)
+            {       
+                //delete physically last image
+                Storage::delete($post->image->path);
+                //change path last image by a new path
+                $post->image->path = $path;
+                //update image
+                $post->image->save();
+            }
+            else
+            {
+                $post->image->save(Image::create(['path' => $path]));
+            
+            }
+        }
 
         $data = $request->only(['title','content']);
         

@@ -43,6 +43,9 @@
                 </div>
                 <div class="card-body">
 
+                    @if ($post->image)
+                        <img src="{{$post->image->url()}}" class="card-img mb-4" alt="image post {{$post->title}}">
+                    @endif
                     <x-username :username="$post->user->username"></x-username>
 
                     <x-tag :tags="$post->tags"></x-tag>

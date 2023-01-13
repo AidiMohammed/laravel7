@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Scopes\LatestScope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
 class Post extends Model
@@ -41,6 +42,32 @@ class Post extends Model
     {
         return $builder->withCount('comments')->orderBy('comments_count','desc');
     }    
+
+    public function scopeGetPost(Builder $builder,$id)
+    {
+        $myPost = null;
+
+        if(Auth::user()->is_admin)
+        {
+            $posts = $builder->withTrashed()->get();
+
+            foreach($posts as $post)
+            {
+                if($post->id == $id)
+                {
+                    $myPost = $post;
+                    break;
+                }
+            }
+
+            if($myPost === null)
+                abort(404);
+            else
+                return $myPost;
+        }
+        else
+            return $builder->findOrFail($id);
+    }
     
     public static function boot()
     {
