@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\PostStore;
 use App\Post;
 use App\User;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class PostsController extends Controller
 {
@@ -118,7 +120,14 @@ class PostsController extends Controller
             dump("Original Extension : {$file->getClientOriginalExtension()}");
             dump("Original Name : {$file->getClientOriginalName()}");
 
+            $lastOne = DB::table('posts')->latest('id')->first();
+
             $file->store('thumbnails');//uploadfile
+            dump(Storage::putFile('posts/thumbnails',$file));
+            dump(Storage::disk('public')->putFile('posts/thumbnails',$file));
+
+            dump($file->storeAs('posts/thumbnails',random_int(1,1000).'.'.$file->guessExtension()));
+            dump(Storage::disk('public')->putFileAs('posts/thumbnails',$file,random_int(1,3000).'.'.$file->guessExtension()));
         }
 
         die();
