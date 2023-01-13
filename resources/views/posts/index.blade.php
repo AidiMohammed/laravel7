@@ -1,6 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
+
+    @if (session('errorComment'))
+    <div class="alert alert-danger" role="alert">
+        {{session('errorComment')}}
+    </div>
+    @endif           
+
     <h1>List Posts</h1>
     @auth
         @if(Auth::user()->is_admin)    
@@ -19,7 +26,7 @@
             <div class="card my-3">
                 <div class="card-header d-flex justify-content-between">
                     <a style="font-weight: bold;font-size: 30px" href="{{route('posts.show',$post->id)}}">
-                        @if ($post->trashed() && $tab != 'archive')
+                        @if ($post->trashed() && $tab == 'archive')
                             <del>
                                 {{$post->title}}
                             </del>
@@ -96,12 +103,9 @@
                             @endcan
 
                         </div>
+                        
+                        @include('posts.formComment',['id' => $post->id])
 
-                        <div class="form-group">
-                            <label for="comment" class="form-label mt-4"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Comment</font></font></label>
-                            <textarea class="form-control" id="comment" rows="4"></textarea>
-                        </div>
-                        <button class="btn btn-outline-primary">Add comment</button>
                     </div>
                 @endauth
             </div>                

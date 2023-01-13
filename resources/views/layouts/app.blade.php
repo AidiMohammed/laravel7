@@ -17,11 +17,12 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet"> 
+    <link href="{{ asset('css/solar.min.css') }}" rel="stylesheet">
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-dark bg-primary shadow-sm">
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'The laravel') }}
@@ -84,16 +85,17 @@
 
         <main class="py-4">
             <div class="container">
-                
+        
                 @if (session('status'))
-                <div class="alert alert-success" role="alert">
-                    {!!session('status')!!}
-                </div>
+                    <div class="alert alert-success" role="alert">
+                        {!!session('status')!!}
+                    </div>
                 @endif                
 
                 @yield('content')
             </div>
         </main>
     </div>
+    <script src="{{ asset('js/bootstrap.bundle.min.js') }}" defer></script>
 </body>
 </html>

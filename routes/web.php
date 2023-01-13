@@ -29,7 +29,7 @@ Route::patch('/posts/{id}/restore','PostsController@restore')->name('post.restor
 Route::delete('/posts/{id}/forceDelete','PostsController@forceDelete');
 
 Route::resource('posts','PostsController');
-Route::resource('comment','CommentController')->only(['destroy']);
+Route::resource('comment','CommentController')->only(['destroy','edit','update']);
 Route::post('comment/store/{post}','CommentController@storeMyComment')->name('comments.storeMyComment');
 Auth::routes();
 

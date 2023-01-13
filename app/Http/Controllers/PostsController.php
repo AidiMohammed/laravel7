@@ -23,7 +23,10 @@ class PostsController extends Controller
     public function index()
     {
     
-        $posts = Post::withCount('comments')->with('user')->get();//I use Scope For Model Post with orderBy desc
+
+        $posts = Cache::remember('posts', now()->addSeconds(60),function(){
+            return Post::withCount('comments')->with(['user','tags'])->get();//I use Scope For Model Post with orderBy desc
+        });
 
         if(Auth::check())
         {
@@ -105,6 +108,20 @@ class PostsController extends Controller
      */
     public function store(PostStore $request)
     {
+        $hasfile = $request->hasFile('picture');
+        dump($hasfile);
+        if($hasfile)
+        {
+            $file = $request->file('picture');
+            dump($file);
+            dump("Mine Type :  {$file->getClientMimeType()}");
+            dump("Original Extension : {$file->getClientOriginalExtension()}");
+            dump("Original Name : {$file->getClientOriginalName()}");
+
+            $file->store('thumbnails');//uploadfile
+        }
+
+        die();
 
         $newPost = new Post();
         $data = request()->only(['title','content']);
@@ -128,9 +145,9 @@ class PostsController extends Controller
     public function show($id)
     {
 
-        $posts = Cache::remember("show-post-{$id}",now()->addSeconds(60),function()
+        $posts = Cache::remember("show-post-{$id}",now()->addSeconds(10),function()
         {
-            return Post::withTrashed()->get();
+            return Post::withTrashed()->with(['tags','user','comments','comments.user'])->get();
         });
         //Post::trashedWithComments($id);
         $myPost= null;

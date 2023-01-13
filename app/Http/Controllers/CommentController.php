@@ -4,37 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Comment;
-use App\Http\Requests\CommentStore;
 use App\Post;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\View\View;
 
 class CommentController extends Controller
 {
     
     public function __construct()
     {
-        $this->middleware('auth')->only(['storeMyComment','destroy']);
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-
+        $this->middleware('auth')->only(['storeMyComment','destroy','edit','update']);
     }
 
     /**
@@ -47,59 +27,25 @@ class CommentController extends Controller
     public function storeMyComment(Request $request,int $id)
     {
         $validator = Validator::make($request->all(),[
-            'content' => 'bail|required|min:4'
+            "content" => 'bail|required|min:4'
         ]);
 
         if($validator->fails())
         {
             session()->flash('errorComment',$validator->errors()->all()[0]);
-            session()->flash('id',$id);
-            return redirect()->route('posts.index');
+            session()->flash('errorCommentId',$id);
+            return redirect()->back();
         }
 
         $newComment = new Comment();
         $post = Post::findOrfail($id);
         
-        $newComment->content = $request->input('content');
+        $newComment->content = $request->input("content");
         $newComment->user_id = Auth::id();
         $newComment->post()->associate($post)->save();
 
         session()->flash('status','The new comment has ben created !!');
-        return redirect()->route('posts.index');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
+        return redirect()->back();
     }
 
     /**
@@ -108,13 +54,43 @@ class CommentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Comment $Comment)
     {
-        $Comment = Comment::findOrFail($id);
         $Comment->delete();
-
 
         session()->flash('status','The Comment has ben deleted !');
         return redirect()->route('posts.show',$Comment->post_id);
+    }
+
+    /**
+     * Show from edit the specified resource from storage.
+     *
+     * @param Comment $comment
+     * @return View
+     */
+    public function edit(Comment $comment)
+    {
+        $this->authorize('update',$comment);
+        return view('posts.editComment',['comment' => $comment]);
+    }
+
+    public function update(Comment $comment,Request $request)
+    {
+        $this->authorize('update',$comment);
+
+        $validator = Validator::make($request->all(),[
+            "content" => 'required|min:4'
+        ]);
+
+        if($validator->fails())
+        {
+            session()->flash('errorComment',$validator->errors()->all()[0]);
+            session()->flash('errorCommentId',$comment->id);
+            return redirect()->back();
+        }
+
+        $comment->update($request->only('content'));
+        session()->flash('status','The comment hass updaetd !!');
+        return redirect()->route('posts.show',['post' => $comment->post_id]);
     }
 }

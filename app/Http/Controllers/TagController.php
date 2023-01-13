@@ -12,6 +12,8 @@ class TagController extends Controller
     public function index($id)
     {
         $tag = Tag::findOrFail($id);
+
+
         
         if(Auth::check())
         {
@@ -33,7 +35,7 @@ class TagController extends Controller
 
 
         return view('posts.index',[
-            'posts' => $tag->posts()->get(),
+            'posts' => $tag->posts()->withCount('comments')->with(['user','tags','comments'])->get(),
             'tab' => 'index'
         ]);
     }

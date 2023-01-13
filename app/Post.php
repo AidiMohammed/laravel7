@@ -15,6 +15,7 @@ class Post extends Model
 
     protected $fillable = ['title','content','active','user_id'];
 
+    //---------------- relationship ---------------------//
     public function comments()
     {
         return $this->hasMany(Comment::class)->dernier();
@@ -25,16 +26,17 @@ class Post extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function scopeMostCommented(Builder $builder)
-    {
-        return $builder->withCount('comments')->orderBy('comments_count','desc');
-    }    
-
     public function tags()
     {
         return $this->belongsToMany(Tag::class)->withTimestamps();
     }
 
+    //----------------- scope --------------------------//
+    public function scopeMostCommented(Builder $builder)
+    {
+        return $builder->withCount('comments')->orderBy('comments_count','desc');
+    }    
+    
     public static function boot()
     {
         //ajouter des scope Global avent le boot "SoftDeletes"
@@ -46,9 +48,9 @@ class Post extends Model
             $post->comments()->delete();
         });
 
-        static::updating(function($post){
+        /*static::updating(function($post){
             Cache::forget("show-post-{$post->id}");
-        });
+        });*/
 
         static::restoring(function($post){
             $post->comments()->restore();
