@@ -27,9 +27,10 @@ class UserPolicy
      * @param  \App\User  $model
      * @return mixed
      */
-    public function view(User $user, User $model)
+    public function view(User $userAuthenticated, User $user)
     {
-        return true;
+        dd('je suis dans user policy dans la method view');
+        return $userAuthenticated->id === $user->id;
     }
 
     /**
@@ -52,6 +53,7 @@ class UserPolicy
      */
     public function update(User $userAuthenticated, User $user)
     {
+        dd('je suis dans user policy methode update');
         return $userAuthenticated->id === $user->id;
     }
 

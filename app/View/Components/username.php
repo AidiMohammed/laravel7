@@ -7,14 +7,16 @@ use Illuminate\View\Component;
 class username extends Component
 {
     public $username;
+    public $userId;
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct($username)
+    public function __construct($username,$userId = null)
     {
         $this->username= $username;
+        $this->userId = $userId;
     }
 
     /**

@@ -18,4 +18,9 @@ class Image extends Model
     {
         return Storage::url($this->path);
     }
+
+    public function avatar()
+    {
+        return Storage::url($this->path);
+    }
 }

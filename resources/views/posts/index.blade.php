@@ -46,7 +46,7 @@
                     @if ($post->image)
                         <img src="{{$post->image->url()}}" class="card-img mb-4" alt="image post {{$post->title}}" height="820" width="820">
                     @endif
-                    <x-username :username="$post->user->username"></x-username>
+                    <x-username :username="$post->user->username" :user-id="$post->user->id"></x-username>
 
                     <x-tag :tags="$post->tags"></x-tag>
                     <hr>

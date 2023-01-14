@@ -78,7 +78,7 @@ class AuthServiceProvider extends ServiceProvider
 
        Gate::before(function($user,$ability)
         {
-            if($user->is_admin && in_array($ability,['delete','edit','update','forceDelete','create','restore']))
+            if($user->is_admin && in_array($ability,['delete','edit','update','forceDelete','create','restore','view']))
                 return true;
         });
     }
