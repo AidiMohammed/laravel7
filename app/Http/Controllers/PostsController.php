@@ -141,9 +141,10 @@ class PostsController extends Controller
         if($request->hasFile('picture'))
         {
             $path = $request->file('picture')->store('posts');
-            $image = new Image(['path' => $path]);
+            //$image = new Image(['path' => $path]);
 
-            $post->image()->save($image);
+            $post->image()->save(image::make(['path' => $path]));
+            
         }
 
         session()->flash('status','The post has ben created !!');
@@ -242,15 +243,10 @@ class PostsController extends Controller
                 //update image
                 $post->image->save();
             }
-            else
-            {
-                
-                //$post->image->update(Image::create(['path' => $path]));
-                $image = new Image();
-                $image->path = $path;
-                $image->post_id = $post->id;
-                $image->save();
-            }
+            else                
+                $post->image()->save(Image::make(['path' => $path]));
+
+            
         }
 
         $data = $request->only(['title','content']);

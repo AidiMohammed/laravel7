@@ -114,8 +114,7 @@
             </div>                
             @empty
             <div class="alert alert-dismissible alert-danger">
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                <h4 class="alert-heading">Not post fund!</h4>
+                <h4 class="alert-heading">Not post found!</h4>
                 <p class="mb-0">List posts is empty, <a href="{{route('posts.create')}}" class="alert-link">Creta new post</a>.</p>
               </div>
             @endforelse

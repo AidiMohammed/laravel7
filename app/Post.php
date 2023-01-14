@@ -79,14 +79,21 @@ class Post extends Model
 
         static::deleting(function($post){
             $post->comments()->delete();
+            Cache::forget('posts');
         });
 
-        /*static::updating(function($post){
+        static::updating(function($post){
             Cache::forget("show-post-{$post->id}");
-        });*/
+            Cache::forget('posts');
+        });
 
         static::restoring(function($post){
             $post->comments()->restore();
+            Cache::forget('posts');
+        });
+
+        static::creating(function($post){
+            Cache::forget('posts');
         });
     }
 
