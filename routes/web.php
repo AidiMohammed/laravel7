@@ -28,6 +28,8 @@ Route::get('/posts/all','PostsController@all')->middleware('can:isAdmin');
 Route::patch('/posts/{id}/restore','PostsController@restore')->name('post.restore');
 Route::delete('/posts/{id}/forceDelete','PostsController@forceDelete')->name('posts.forceDelete');
 
+Route::resource('user','UserController')->only(['show','edit','update']);
+
 Route::resource('posts','PostsController');
 Route::resource('comment','CommentController')->only(['destroy','edit','update']);
 Route::post('comment/store/{post}','CommentController@storeMyComment')->name('comments.storeMyComment');
