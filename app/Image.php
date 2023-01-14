@@ -9,9 +9,9 @@ class Image extends Model
 {
     protected $fillable = ['path'];
 
-    public function post()
+    public function imageable()
     {
-        $this->belongsTo(Post::class);
+        $this->morphTo();
     }
 
     public function url()
@@ -19,8 +19,4 @@ class Image extends Model
         return Storage::url($this->path);
     }
 
-    public function avatar()
-    {
-        return Storage::url($this->path);
-    }
 }

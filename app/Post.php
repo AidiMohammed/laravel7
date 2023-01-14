@@ -34,7 +34,7 @@ class Post extends Model
 
     public function image()
     {
-        return $this->hasOne(Image::class);
+        return $this->morphOne(Image::class,'imageable');
     }
 
     //----------------- scope --------------------------//

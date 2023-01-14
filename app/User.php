@@ -38,6 +38,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    //------------------------- relationship -----------------------------
+
     public function comments()
     {
         return $this->hasMany('App\Comment');
@@ -48,6 +50,12 @@ class User extends Authenticatable
         return $this->hasMany('App\Post');
     }
 
+    public function image()
+    {
+        return $this->morphOne(Image::class,'imageable');
+    }
+
+    //-------------------------- scopos ----------------------------------
     public function scopeMostActiveUser(Builder $builder)
     {
         return $builder->withCount('posts')->orderBy('posts_count','desc');
