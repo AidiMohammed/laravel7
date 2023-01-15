@@ -9,9 +9,9 @@
             <div class="col-md-12 text-center">
                 <!-- chack user is has avatar -->
                 @if ($user->image)
-                    <img class="rounded-circle my-4" src="{{$user->image->url()}}"/>                    
+                    <img class="rounded-circle my-4" src="{{$user->image->url()}}" height="320" width="320"/>                    
                 @else
-                    <img class="rounded-circle my-4" src="http://localhost:8000/storage/users/default/default-avatar.jpg"/>                    
+                    <img class="rounded-circle my-4" src="http://localhost:8000/storage/users/default/default-avatar.jpg" height="320" width="320"/>                    
                 @endif
                 <h2>{{$user->username}}</h2>
 

@@ -19,7 +19,7 @@ class Post extends Model
     //---------------- relationship ---------------------//
     public function comments()
     {
-        return $this->hasMany(Comment::class)->dernier();
+        return $this->morphMany(Comment::class,'commentable')->dernier();
     }
 
     public function user()

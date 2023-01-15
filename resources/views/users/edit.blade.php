@@ -8,7 +8,7 @@
         <div class="row">
             <div class="col-md-12 text-center">
                 @if ($user->image)
-                    <img class="rounded-circle my-4" src="{{$user->image->url()}}" height="320"/>                    
+                    <img class="rounded-circle my-4" src="{{$user->image->url()}}" height="320" width="320"/>                    
                 @else
                     <img class="rounded-circle my-4" src="http://localhost:8000/storage/users/default/default-avatar.jpg" height="320" width="320"/>                    
                 @endif

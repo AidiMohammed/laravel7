@@ -29,8 +29,7 @@ class UserPolicy
      */
     public function view(User $userAuthenticated, User $user)
     {
-        dd('je suis dans user policy dans la method view');
-        return $userAuthenticated->id === $user->id;
+        return true;
     }
 
     /**
@@ -53,7 +52,6 @@ class UserPolicy
      */
     public function update(User $userAuthenticated, User $user)
     {
-        dd('je suis dans user policy methode update');
         return $userAuthenticated->id === $user->id;
     }
 

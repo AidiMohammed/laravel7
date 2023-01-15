@@ -71,7 +71,7 @@
 
         </div>
 
-        @include('posts.sidebar');
+        @include('posts.sidebar')
     </div>
    
 

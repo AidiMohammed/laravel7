@@ -28,6 +28,11 @@ class Comment extends Model
         return $builder->orderBy(static::CREATED_AT,'desc');
     }
 
+    public function commentable()
+    {
+        return $this->morphTo();
+    }
+
 
     /*public static function boot()
     {
