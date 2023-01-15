@@ -44,7 +44,9 @@
                 <div class="card-body">
 
                     @if ($post->image)
-                        <img src="{{$post->image->url()}}" class="card-img mb-4" alt="image post {{$post->title}}" height="820" width="820">
+                            <img src="{{$post->image->url()}}" class="card-img mb-4" alt="image post {{$post->title}}" height="600" width="600">
+                        @else
+                            <img src="http://localhost:8000/storage/posts/default/default-post.jpg" class="card-img mb-4" alt="iamge defaut post" height="600" width="600">
                     @endif
                     <x-username :username="$post->user->username" :user-id="$post->user->id"></x-username>
 

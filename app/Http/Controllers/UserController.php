@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateProfile;
+use App\Image;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -73,9 +76,27 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(UpdateProfile $request, User $user)
     {
-        dd($user);
+
+        if($request->hasFile('avatar'))
+        {
+            $pathNewAvatar = $request->file('avatar')->store('users');
+            if($user->iamge)
+            {
+                //delet last avatar
+                Storage::delete($user->image->path);
+                $user->image->path = $pathNewAvatar;
+                $user->iamge->save();
+            }
+            else//if user has no image
+                $user->image()->save(Image::make(['path' => $pathNewAvatar]));
+        }
+
+        $data = $request->only('username');
+        $user->update($data);
+
+        return redirect()->back()->withStatus('profile hass updated !!');
     }
 
     /**
