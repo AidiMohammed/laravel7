@@ -19,6 +19,7 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet"> 
     <link href="{{ asset('css/solar.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
 </head>
 <body>
     <div id="app">
@@ -27,6 +28,7 @@
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'The laravel') }}
                 </a>
+                <i class="bi bi-airplane-engines-fill"></i>
                 <ul class="nav navbar-nav">
                     <li class="nav-item">
                         <a class="nav-link" href="{{route('posts.index')}}">Posts</a>
@@ -59,17 +61,27 @@
                             @endif
                         @else
                             <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->username }} <span class="caret"></span>
-                                </a>
+
+                                @if (Auth::user()->image)
+                                    <a href="#" class="" id="navbarDropdown" class ="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                        <img src="{{Auth::user()->image->url()}}" alt="avatar user {{Auth::user()->username}}" class="rounded-circle" width="40" >
+                                    </a>
+                                @else
+                                    <a href="#" class="" id="navbarDropdown" class ="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                        <img src="http://localhost:8000/storage/users/default/default-avatar.jpg" alt="default iamge user" class="rounded-circle" width="40" height="40">
+                                    </a>
+                                @endif
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                    <a  class="dropdown-item" href="{{route('user.edit',Auth::user()->id)}}">
+                                        Edit profile
+                                        
+                                    </a>
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
-
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                         @csrf
                                     </form>

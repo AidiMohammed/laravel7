@@ -29,8 +29,8 @@ class AddMorhpToCommentsTable extends Migration
     public function down()
     {
         Schema::table('comments', function (Blueprint $table) {
-            $table->dropMorphs('commentable');
             $table->foreignId('post_id')->constrained()->onDelete('cascade');
+            $table->dropMorphs('commentable');
         });
     }
 }

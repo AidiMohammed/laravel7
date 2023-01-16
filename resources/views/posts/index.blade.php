@@ -37,7 +37,7 @@
                     <button type = "button" class = "btn btn-primary position-relative ">
                         comment(s)
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                            {{$post->comments_count}}
+                            {{count($post->comments)}}
                         </span>
                     </button>
                 </div>
@@ -48,7 +48,7 @@
                         @else
                             <img src="http://localhost:8000/storage/posts/default/default-post.jpg" class="card-img mb-4" alt="iamge defaut post" height="600" width="600">
                     @endif
-                    <x-username :username="$post->user->username" :user-id="$post->user->id"></x-username>
+                    <x-username :user="$post->user"></x-username>
 
                     <x-tag :tags="$post->tags"></x-tag>
                     <hr>
@@ -76,14 +76,14 @@
                         <div class="d-flex justify-content-between">
                             <div>
                                 @can('update', $post)
-                                    <a class="btn btn-secondary" href="{{route('posts.edit',$post->id)}}">Edit your post</a>
+                                    <a class="btn btn-light" href="{{route('posts.edit',$post->id)}}">Edit your post</a>
                                 @endcan
                                 @can('restore', $post)
                                     @if ($post->deleted_at)
                                         <form class="d-inline" action="{{route('post.restore',$post->id)}}" method="POST">
                                             @csrf
                                             @method('PATCH')
-                                            <input type="submit" class="btn btn-success" value="Restore">
+                                            <input type="submit" class="btn btn-info" value="Restore">
                                         </form>
                                     @endif
                                 @endcan
@@ -108,8 +108,8 @@
                             @endcan
 
                         </div>
-                        
-                        @include('posts.formComment',['id' => $post->id])
+                    
+                        <x-form-comment :model="$post" :action="route('comments.storeMyComment', ['post' => $post->id])"></x-form-comment>
 
                     </div>
                 @endauth

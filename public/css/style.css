@@ -1,0 +1,108 @@
+
+.card-user{
+    width: 400px;
+    border: none;
+    border-radius: 10px;
+     
+    background-color: #fff;
+  }
+  
+  
+  
+  .stats{
+  
+        background: #f2f5f8 !important;
+  
+      color: #000 !important;
+  }
+  .articles{
+    font-size:10px;
+    color: #a1aab9;
+  }
+  .number1{
+    font-weight:500;
+  }
+  .followers{
+      font-size:10px;
+    color: #a1aab9;
+  
+  }
+  .number2{
+    font-weight:500;
+  }
+  .rating{
+      font-size:10px;
+    color: #a1aab9;
+  }
+  .number3{
+    font-weight:500;
+  }
+
+  .be-comment-block {
+    margin-bottom: 50px !important;
+    border-radius: 2px;
+    padding: 50px 70px;
+}
+
+.comments-title {
+    font-size: 16px;
+    color: #cacaca;
+    margin-bottom: 15px;
+    font-family: 'Conv_helveticaneuecyr-bold';
+}
+
+.be-img-comment {
+    width: 60px;
+    height: 60px;
+    float: left;
+    margin-bottom: 15px;
+}
+
+.be-ava-comment {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+}
+
+.be-comment-content {
+    margin-left: 80px;
+}
+
+.be-comment-content span {
+    display: inline-block;
+    width: 49%;
+    margin-bottom: 15px;
+}
+
+.be-comment-name {
+    font-size: 13px;
+    font-family: 'Conv_helveticaneuecyr-bold';
+    color: #8f8f8f;
+    text-transform: uppercase;
+}
+
+
+.be-comment-content span {
+    display: inline-block;
+    width: 49%;
+    margin-bottom: 15px;
+}
+
+.be-comment-time {
+    text-align: right;
+}
+
+.be-comment-time {
+    font-size: 11px;
+    color: #b4b7c1;
+}
+
+.be-comment-text {
+    font-size: 13px;
+    line-height: 18px;
+    color: #7a8192;
+    display: block;
+    /*background: #f6f6f7;*/
+    border-radius: 12px;
+    padding: 15px 20px 20px 20px;
+}

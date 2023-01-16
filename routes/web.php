@@ -29,6 +29,7 @@ Route::patch('/posts/{id}/restore','PostsController@restore')->name('post.restor
 Route::delete('/posts/{id}/forceDelete','PostsController@forceDelete')->name('posts.forceDelete');
 
 Route::resource('user','UserController')->only(['show','edit','update']);
+Route::resource('user.comment','UserCommentController')->only(['store']);
 
 Route::resource('posts','PostsController');
 Route::resource('comment','CommentController')->only(['destroy','edit','update']);

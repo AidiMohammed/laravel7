@@ -14,7 +14,7 @@ class CommentController extends Controller
     
     public function __construct()
     {
-        $this->middleware('auth')->only(['storeMyComment','destroy','edit','update']);
+        $this->middleware('auth');
     }
 
     /**
@@ -24,7 +24,7 @@ class CommentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function storeMyComment(Request $request,int $id)
+    public function storeMyComment(Request $request,Post $post)
     {
         $validator = Validator::make($request->all(),[
             "content" => 'bail|required|min:4'
@@ -33,19 +33,18 @@ class CommentController extends Controller
         if($validator->fails())
         {
             session()->flash('errorComment',$validator->errors()->all()[0]);
-            session()->flash('errorCommentId',$id);
+            session()->flash('errorCommentId',$post->id);
             return redirect()->back();
         }
-
         $newComment = new Comment();
-        $post = Post::findOrfail($id);
         
-        $newComment->content = $request->input("content");
-        $newComment->user_id = Auth::id();
-        $newComment->post()->associate($post)->save();
+        $post->comments()->save(Comment::make([
+            'content' => $request->content,
+            'user_id' => $request->user()->id
+        ]));
+        
 
-        session()->flash('status','The new comment has ben created !!');
-        return redirect()->back();
+        return redirect()->back()->withStatus('The new commetn has ben created !!');
     }
 
     /**
@@ -54,12 +53,10 @@ class CommentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Comment $Comment)
+    public function destroy(Comment $comment)
     {
-        $Comment->delete();
-
-        session()->flash('status','The Comment has ben deleted !');
-        return redirect()->route('posts.show',$Comment->post_id);
+        $comment->delete();
+        return redirect()->back()->withStatus('The Comment has ben deleted !');
     }
 
     /**
@@ -90,7 +87,13 @@ class CommentController extends Controller
         }
 
         $comment->update($request->only('content'));
-        session()->flash('status','The comment hass updaetd !!');
-        return redirect()->route('posts.show',['post' => $comment->post_id]);
+
+        if($comment->commentable_type == 'App\User')
+            return redirect()->route('user.show',$comment->commentable->id)->withStatus('your opinion updeted !!');
+        
+        else if($comment->commentable_type == 'App\Post')
+            return redirect()->route('post.index')->withStatus('you have update your comment');
+
+        
     }
 }

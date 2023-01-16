@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Comment;
 use App\Http\Requests\UpdateProfile;
 use App\Image;
+use App\Post;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -55,7 +57,10 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return view('users.show',['user' => $user]);
+        $myUser = User::withCount('comments')->findOrFail($user->id);
+        $postCommentsCount = Comment::where('user_id',$user->id)->where('commentable_type',Post::class)->count();
+        
+        return view('users.show',['user' => $myUser,'postCommentsCount' => $postCommentsCount]);
     }
 
     /**

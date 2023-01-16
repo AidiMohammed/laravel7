@@ -6,12 +6,13 @@ use App\Scopes\LatestScope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Cache;
 
 class Comment extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ['content'];
+    protected $fillable = ['content','user_id'];
 
     public function post()
     {
@@ -33,10 +34,12 @@ class Comment extends Model
         return $this->morphTo();
     }
 
-
-    /*public static function boot()
+    public static function boot()
     {
         parent::boot();
-        static::addGlobalScope(new LatestScope);
-    }*/
+        
+        static::deleting(function($comment){
+            Cache::forget("show-post-{$comment->commentable->id}");
+        });
+    }
 }
