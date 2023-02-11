@@ -27,7 +27,7 @@ class CommentController extends Controller
     public function storeMyComment(Request $request,Post $post)
     {
         $validator = Validator::make($request->all(),[
-            "content" => 'bail|required|min:4'
+            "content" => 'bail|required|min:4',
         ]);
 
         if($validator->fails())
@@ -40,7 +40,7 @@ class CommentController extends Controller
         
         $post->comments()->save(Comment::make([
             'content' => $request->content,
-            'user_id' => $request->user()->id
+            'user_id' => $request->user()->id,
         ]));
         
 

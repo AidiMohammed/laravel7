@@ -75,7 +75,7 @@ class Post extends Model
         parent::boot();
 
 
-        //static::addGlobalScope(new LatestScope);
+        static::addGlobalScope(new LatestScope);
 
         static::deleting(function($post){
             $post->comments()->delete();
