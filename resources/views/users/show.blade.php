@@ -10,7 +10,7 @@
                     <div class="d-flex align-items-center">
                         <div class="image">
                             @if ($user->image)
-                                <img src="{{$user->image->url()}}" alt="avatar user" class="rounded" width="100">
+                                <img src="{{Storage::url($user->image->path)}}" alt="avatar user" class="rounded" width="100">
                             @else
                                 <img src="http://localhost:8000/storage/users/default/default-avatar.jpg" class="rounded" width="100" >
                             @endif
@@ -61,7 +61,7 @@
             </div>
         </div>
         <div class="col-md-8">
-            <x-form-comment :model="$user" :action="route('user.comment.store',$user->id)"></x-form-comment>
+            <x-form-comment :model="$user" action="{{route('user.comment.store',$user->id)}}"></x-form-comment>
         </div>
     </div>
 
@@ -71,53 +71,6 @@
             </div>
         </div>
 
-        @if (count($user->comments) > 0)    
-            <div class="be-comment-block">
-            <h1 class="comments-title">Opinions ({{count($user->comments)}})</h1>
-        @endif
-        @forelse ($user->comments as $comment)
-            <div class="be-comment">
-                <div class="be-img-comment">	
-                @if ($user->image)
-                    <a href="{{route('user.show',$comment->user_id)}}">
-                        <img src="{{$comment->user->image->url()}}" alt="avatar user" class="be-ava-comment">
-                    </a>
-                @else 
-                    <a href="blog-detail-2.html">
-                        <img src="http://localhost:8000/storage/users/default/default-avatar.jpg" alt="avater default user" class="be-ava-comment">
-                    </a>
-                @endif
-                </div>
-                <div class="be-comment-content">
-                    <span class="be-comment-name">
-                        <a href="{{route('user.show',$comment->user_id)}}">{{$comment->user->username}}</a>
-                        </span>
-                    <span class="be-comment-time">
-                        <i class="fa fa-clock-o"></i>
-                        {{$comment->created_at->diffForHumans()}}
-                    </span>
-        
-                    <p class="be-comment-text bg-dark">
-                        {{$comment->content}}
-                    </p>
-                    
-                    <div class="my-3">
-                        @can('update', $comment)
-                            <a href="{{route('comment.edit',['comment' => $comment->id])}}" class="btn btn-primary btn-sm mr-2">Edit</a>
-                        @endcan
-                        @can('delete', $comment)
-                            <button class="btn btn-danger btn-sm">Delete</button>
-                        @endcan
-                    </div>
-                </div>
-            </div>
-        @empty  
-            <div class="alert alert-dismissible alert-danger mt-4">
-                <h4 class="alert-heading">Not opinions found!</h4>
-            </div>
-        @endforelse
-        @if (count($user->comments) > 0)
-            </div>
-        @endif
+        <x-list-items :items='$user->comments'></x-list-items>
     
 @endsection

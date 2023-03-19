@@ -34,19 +34,19 @@
                             {{$post->title}}
                         @endif
                     </a>
-                    <button type = "button" class = "btn btn-primary position-relative ">
+                    <a href="{{route('posts.show',$post->id).'#comments-post'}}" class = "btn btn-primary position-relative ">
                         comment(s)
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                             {{count($post->comments)}}
                         </span>
-                    </button>
+                    </a>
                 </div>
                 <div class="card-body">
 
                     @if ($post->image)
                             <img src="{{$post->image->url()}}" class="card-img mb-4" alt="image post {{$post->title}}" height="600" width="600">
                         @else
-                            <img src="http://localhost:8000/storage/posts/default/default-post.jpg" class="card-img mb-4" alt="iamge defaut post" height="600" width="600">
+                            <img src="{{Storage::url('posts/default/default-post.jpg')}}" class="card-img mb-4" alt="iamge defaut post" height="600" width="600">
                     @endif
                     <x-username :user="$post->user"></x-username>
 
@@ -59,13 +59,13 @@
                     @if ($post->created_at->diffInHours() < 1)
                         <x-badge type='success'> New </x-badge>
                     @else
-                        <x-badge type='secondary'> Old</x-badge>
+                        <x-badge type='secondary'> Old </x-badge>
                     @endif
 
                     <div class="d-inline">
-                        <x-created-updated :date='$post->created_at'> Crated at</x-created-updated>
+                        <x-created-updated :date='$post->created_at'> Crated at : </x-created-updated>
                         @if ($post->created_at != $post->updated_at)
-                            <x-created-updated :date='$post->updated_at'> Updated at</x-created-updated>
+                            <x-created-updated :date='$post->updated_at'> Updated at : </x-created-updated>
                         @endif
                     </div>
                     
@@ -109,7 +109,7 @@
 
                         </div>
                     
-                        <x-form-comment :model="$post" :action="route('comments.storeMyComment', ['post' => $post->id])"></x-form-comment>
+                        <x-form-comment :model="$post" action="{{route('comments.storeMyComment', ['post' => $post->id])}}"></x-form-comment>
 
                     </div>
                 @endauth

@@ -102,7 +102,15 @@
                     <div class="alert alert-success" role="alert">
                         {!!session('status')!!}
                     </div>
-                @endif                
+                @endif
+                                
+                @error('content')
+                    <div class="alert alert-dismissible alert-warning">
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        <h4 class="alert-heading">Warning!</h4>
+                        <p class="mb-0">{{$message}}</p>
+                    </div> 
+                @enderror
 
                 @yield('content')
             </div>

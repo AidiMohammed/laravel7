@@ -4,16 +4,17 @@ namespace App\View\Components;
 
 use Illuminate\View\Component;
 
-class CommentComponent extends Component
+class listItems extends Component
 {
+    public $items;
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($items)
     {
-        //
+        $this->items = $items;
     }
 
     /**
@@ -23,6 +24,6 @@ class CommentComponent extends Component
      */
     public function render()
     {
-        return view('components.comment-component');
+        return view('components.list-items');
     }
 }

@@ -32,8 +32,8 @@
                     </div>
 
                     <div class="form-group my-4">
-                        <label class="form-label" for="avatar">Avatare :</label>
-                        <input type="file" class="form-control-file @error('avatar') is-invalid @enderror" name="avatar" id="avatar">
+                        <label class="form-label" for="picture">Avatare :</label>
+                        <input type="file" class="form-control-file @error('avatar') is-invalid @enderror" name="avatar" id="picture">
 
                         @error('avatar')
                             <span class="invalid-feedback">

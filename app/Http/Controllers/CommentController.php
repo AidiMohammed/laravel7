@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Answer;
 use Illuminate\Http\Request;
 use App\Comment;
+use App\Http\Requests\AnswerStore;
 use App\Post;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -92,8 +94,34 @@ class CommentController extends Controller
             return redirect()->route('user.show',$comment->commentable->id)->withStatus('your opinion updeted !!');
         
         else if($comment->commentable_type == 'App\Post')
-            return redirect()->route('post.index')->withStatus('you have update your comment');
-
-        
+            return redirect()->route('posts.show',['post' => $comment->commentable->id])->withStatus('you have update your comment');        
     }
+
+    public function replyComment(AnswerStore $request,Comment $comment)
+    {
+        $answer = new Answer();
+
+        $answer->user_id = $request->user()->id;
+        $answer->comment_id = $comment->id;
+        $answer->content = $request->content;
+
+        $answer->comment()->associate($comment)->save();
+        
+        //$comment->answers()->save($answer);
+
+        return redirect()->back();
+    }
+
+    public function deleteAnswer(Answer $answer)
+    {
+        $answer->delete();
+
+        return redirect()->back()->with('status','Answer has been delete !');
+    }
+
+    public function editAnsewr(Answer $answer)
+    {
+
+    }
+
 }

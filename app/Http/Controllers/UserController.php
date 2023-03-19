@@ -83,21 +83,25 @@ class UserController extends Controller
      */
     public function update(UpdateProfile $request, User $user)
     {
+        //$user = User::findOrFail($id);
 
         if($request->hasFile('avatar'))
         {
-            $pathNewAvatar = $request->file('avatar')->store('users');
-            if($user->iamge)
+            $path = $request->file('avatar')->store('users');
+            if($user->image)
             {
-                //delet last avatar
+                //delete physically last image
                 Storage::delete($user->image->path);
-                $user->image->path = $pathNewAvatar;
-                $user->iamge->save();
+                //change path last image by a new path
+                $user->image->path = $path;
+                //update image
+                $user->image->save();
             }
-            else//if user has no image
-                $user->image()->save(Image::make(['path' => $pathNewAvatar]));
+            else
+                $user->image()->save(Image::make(['path' => $path]));
+            
         }
-
+        
         $data = $request->only('username');
         $user->update($data);
 

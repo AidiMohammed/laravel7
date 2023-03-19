@@ -27,7 +27,7 @@ class UserPolicy
      * @param  \App\User  $model
      * @return mixed
      */
-    public function view(User $userAuthenticated, User $user)
+    public function view()
     {
         return true;
     }

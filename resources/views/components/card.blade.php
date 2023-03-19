@@ -8,7 +8,7 @@
     <ul class="list-group list-group-flush">
         @forelse ($items as $item)
             <li class="list-group-item">
-                <p><span class="badge badge-info ">{{$item->posts_count}} </span> {{$item->username}}</p>
+                <p><span class="badge badge-info ">{{$item->posts_count}} </span> <a href="{{route('user.show',['user' => $item->id])}}">{{$item->username}}</a></p>
             </li>
         @empty
             <div>Non item found !!</div>

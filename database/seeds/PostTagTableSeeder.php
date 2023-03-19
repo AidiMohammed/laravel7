@@ -16,8 +16,8 @@ class PostTagTableSeeder extends Seeder
         $tagCount = Tag::count();
 
         Post::all()->each(function($post) use($tagCount){
-            $take = random_int(1,$tagCount);
-            $TagsIds = Tag::inRandomOrder()->take($take)->get()->pluck('id');
+            $tag = random_int(1,$tagCount);
+            $TagsIds = Tag::inRandomOrder()->take($tag)->get()->pluck('id');
 
             $post->tags()->sync($TagsIds);
         });

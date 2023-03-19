@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Policies\AnswerPolicy;
 use App\Policies\CommentPolicy;
 use App\Policies\PostPolicy;
 use App\Policies\UserPolicy;
@@ -18,7 +19,8 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         'App\Post' => PostPolicy::class,
         'App\Comment' => CommentPolicy::class,
-        'App\User' => UserPolicy::class
+        'App\User' => UserPolicy::class,
+        'App\Answer' => AnswerPolicy::class
     ];
 
     /**
@@ -45,6 +47,10 @@ class AuthServiceProvider extends ServiceProvider
                 redirect()->back();
                 return true;
             }
+        });
+
+        Gate::define('post.archive',function($user){
+            return $user->is_admin;
         });
 
         /*Gate::define('post.delete','App\Policies\postPolicy@delete');

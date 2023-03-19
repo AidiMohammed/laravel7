@@ -23,10 +23,8 @@ class PostsController extends Controller
      */
     public function index()
     {
-    
-
         $posts = Cache::remember('posts', now()->addSeconds(60),function(){
-            return Post::withCount('comments')->with(['user','tags'])->get();//I use Scope For Model Post with orderBy desc
+            return Post::withCount('comments')->with(['user','tags','image','comments','user.image'])->get();//I use Scope For Model Post with orderBy desc
         });
 
         if(Auth::check())
@@ -35,14 +33,13 @@ class PostsController extends Controller
             {
                 $archiveCount = Post::onlyTrashed()->get();
                 $allCount = Post::withTrashed()->get();
-                $indexCount = Post::withoutTrashed()->get();
                  
                 return view('posts.index',[
                     'posts' => $posts,
                     'tab' => 'index',
                     'archiveCount' => $archiveCount->count() ,
                     'allCount'=> $allCount->count(), 
-                    'indexCount' => $indexCount->count()]);
+                    'indexCount' => $posts->count()]);
             }
             else
             {
@@ -61,15 +58,19 @@ class PostsController extends Controller
 
     public function archive()
     {
+        $this->authorize('post.archive');
 
-        $posts = Post::onlyTrashed()->withCount('comments')->with('user')->get();
-        $archiveCount = Post::onlyTrashed()->get();
+        $myPosts = Cache::remember('posts.archives',now()->addMinutes(15),function(){
+            return Post::onlyTrashed()->withCount('comments')->with('user')->get();
+        });
+
+        $posts = $myPosts;
         $allCount = Post::withTrashed()->get();
         $indexCount = Post::withoutTrashed()->get();
         return view('posts.index',[
             'posts' => $posts,
             'tab' => 'archive',
-            'archiveCount' => $archiveCount->count() ,
+            'archiveCount' => $posts->count() ,
             'allCount'=> $allCount->count(),
             'indexCount' => $indexCount->count()]);
     }
@@ -78,13 +79,12 @@ class PostsController extends Controller
     {
         $posts = Post::withTrashed()->withCount('comments')->with('user')->get();
         $archiveCount = Post::onlyTrashed()->get();
-        $allCount = Post::withTrashed()->get();
         $indexCount = Post::withoutTrashed()->get();
         return view('posts.index',[
             'posts' => $posts,
             'tab' => 'all',
             'archiveCount' => $archiveCount->count(),
-            'allCount'=> $allCount->count(),
+            'allCount'=> $posts->count(),
             'indexCount' => $indexCount->count()]);
     }
 
@@ -130,7 +130,7 @@ class PostsController extends Controller
         }*/
 
         $newPost = new Post();
-        $data = request()->only(['title','content']);
+        $data = $request->only(['title','content']);
 
         $data['active'] = false;
         $data['user_id'] = Auth::id();//request->user()->id
@@ -243,10 +243,10 @@ class PostsController extends Controller
                 //update image
                 $post->image->save();
             }
-            else                
+            else      
+            {
                 $post->image()->save(Image::make(['path' => $path]));
-
-            
+            }             
         }
 
         $data = $request->only(['title','content']);

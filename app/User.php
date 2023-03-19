@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable
 {
@@ -42,7 +43,7 @@ class User extends Authenticatable
 
     public function comments()
     {
-        return $this->morphMany(Comment::class,'commentable');
+        return $this->morphMany(Comment::class,'commentable')->dernier();
     }
 
     public function posts()
@@ -50,9 +51,19 @@ class User extends Authenticatable
         return $this->hasMany(Post::class);
     }
 
+    public function answer()
+    {
+        return $this->hasMany(Answer::class);
+    }
+
     public function image()
     {
         return $this->morphOne(Image::class,'imageable');
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
     }
 
     //-------------------------- scopos ----------------------------------
@@ -66,5 +77,16 @@ class User extends Authenticatable
         return $builder->withCount(['posts' => function(Builder $builder){
             $builder->whereBetween(static::CREATED_AT,[now()->subMonth(1),now()]);
         }])->orderBy('posts_count','desc');
+    }
+
+    //------------------------ foot fucntion -------------------------------
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::updating(function($user){
+            Storage::delete($user->image);
+        });
     }
 }

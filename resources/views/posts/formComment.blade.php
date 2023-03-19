@@ -1,4 +1,4 @@
-<form method="POST" action="{{route('comments.storeMyComment', ['post' => $id])}}">
+<form method="POST" action="{{route('comments.storeMyComment', ['post' => $id])}}" class="mb-4">
     @csrf
 
     <div class="form-group">
