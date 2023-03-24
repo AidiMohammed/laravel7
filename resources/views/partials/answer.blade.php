@@ -1,4 +1,5 @@
 @foreach ($item->answers as $item)
+
 <div class="be-img-comment">	
     @if ($item->user->image)
         <a href="{{route('user.show',$item->user_id)}}">
@@ -12,7 +13,7 @@
 </div>
 <div class="be-comment-content">
     <span class="be-comment-name">
-        <a href="{{route('user.show',$item->user_id)}}">{{$item->user->username}}</a> <span >To</span>
+        <a href="{{route('user.show',$item->user_id)}}">{{$item->user->username}}</a> @ {{$item->comment->user->username}}
     </span>
     <span class="be-comment-time">
         <i class="fa fa-clock-o"></i>

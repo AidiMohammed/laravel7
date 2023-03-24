@@ -15,6 +15,8 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet"> 
@@ -35,6 +37,9 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{route('posts.create')}}">New post</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{route('contact')}}">Contact</a>
                     </li>
                 </ul>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">

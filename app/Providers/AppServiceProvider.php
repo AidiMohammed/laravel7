@@ -2,6 +2,12 @@
 
 namespace App\Providers;
 
+use App\Answer;
+use App\Comment;
+use App\Observers\AnswerObserver;
+use App\Observers\CommentObserve;
+use App\Observers\PostObserve;
+use App\Post;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -24,5 +30,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         view()->composer('posts.sidebar','App\Http\ViewComposers\ActivityComposer');
+        Post::observe(PostObserve::class);
+        Comment::observe(CommentObserve::class);
+        Answer::observe(AnswerObserver::class);
     }
 }

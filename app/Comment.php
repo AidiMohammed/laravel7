@@ -34,6 +34,11 @@ class Comment extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function tags()
+    {
+        return $this->morphToMany(Tag::class,'taggable')->withTimestamps();
+    }
+
     public function answers()
     {
         return $this->hasMany(Answer::class);
@@ -60,15 +65,5 @@ class Comment extends Model
     public function scopeDernier(Builder $builder)
     { 
         return $builder->orderBy(static::CREATED_AT,'desc');
-    }
-
-//------------------------ reset cashe -----------------------
-    public static function boot()
-    {
-        parent::boot();
-        
-        static::deleting(function($comment){
-            Cache::forget("show-post-{$comment->commentable->id}");
-        });
     }
 }

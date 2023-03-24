@@ -29,7 +29,7 @@ class Post extends Model
 
     public function tags()
     {
-        return $this->belongsToMany(Tag::class)->withTimestamps();
+        return $this->morphToMany(Tag::class,'taggable')->withTimestamps();
     }
 
     public function image()
@@ -73,28 +73,8 @@ class Post extends Model
     {
         //ajouter des scope Global avent le boot "SoftDeletes"
         parent::boot();
-
-
         static::addGlobalScope(new LatestScope);
 
-        static::deleting(function($post){
-            $post->comments()->delete();
-            Cache::forget('posts');
-        });
-
-        static::updating(function($post){
-            Cache::forget("show-post-{$post->id}");
-            Cache::forget('posts');
-        });
-
-        static::restoring(function($post){
-            $post->comments()->restore();
-            Cache::forget('posts');
-        });
-
-        static::creating(function($post){
-            Cache::forget('posts');
-        });
     }
 
 }

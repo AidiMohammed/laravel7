@@ -1,3 +1,4 @@
+<x-tag :tags="$item->tags"></x-tag>
 <div class="be-comment my-4">
     <div class="be-img-comment">	
     @if ($item->user->image)
@@ -23,6 +24,7 @@
             {{$item->content}}
         </p>
 
+    
         @include('partials.answer')
         
         <div class="my-3 d-flex">
@@ -46,4 +48,5 @@
 
         </div>
     </div>
+    <hr>
 </div>

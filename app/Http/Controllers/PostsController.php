@@ -161,9 +161,9 @@ class PostsController extends Controller
     public function show($id)
     {
 
-        $posts = Cache::remember("show-post-{$id}",now()->addSeconds(10),function()
+        $posts = Cache::remember("show-post-{$id}",now()->addMinutes(10),function()
         {
-            return Post::withTrashed()->with(['tags','user','comments','comments.user'])->get();
+            return Post::withTrashed()->with(['tags','user','comments','comments.user','comments.answers','comments.answers.user','comments.tags'])->get();
         });
         //Post::trashedWithComments($id);
         $myPost= null;

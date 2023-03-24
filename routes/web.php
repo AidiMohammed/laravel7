@@ -17,11 +17,15 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('contact',function(){
+        return view('contact');
+})->name('contact');
+
 route::view('factories','factories.create')->name('factories')->middleware('can:factories.createPosts');
 route::get('secret','HomeController@secret')->name('secret')->middleware('can:secret.page');
 route::post('factories/create/posts','FactoryController@createPosts')->name('factories.storePosts');
 
-route::get('/posts/tags/{tag}' , 'TagController@index')->name('posts.tag.index');
+route::get('posts/tags/{tag}' , 'TagController@index')->name('posts.tag.index');
 
 Route::get('posts/archive','PostsController@archive')->middleware('can:isAdmin');
 Route::get('posts/all','PostsController@all')->middleware('can:isAdmin');
@@ -38,5 +42,7 @@ Route::resource('posts','PostsController');
 Route::resource('comment','CommentController')->only(['destroy','edit','update']);
 Route::post('comment/store/{post}','CommentController@storeMyComment')->name('comments.storeMyComment');
 Auth::routes();
+
+Route::post('email/contact','EmailController@create')->name('email.contact.us');
 
 Route::get('home', 'HomeController@index')->name('home');
