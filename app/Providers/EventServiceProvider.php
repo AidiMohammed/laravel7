@@ -3,6 +3,10 @@
 namespace App\Providers;
 
 use App\Events\CommentPosted;
+use App\Events\EventDeletCommentFromPost;
+use App\Events\EventNewPostCreated;
+use App\Listeners\ListenerDeletCommentFromPost;
+use App\Listeners\ListenerNewPostCreated;
 use App\Listeners\NotifyUserAboutComment;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -23,7 +27,15 @@ class EventServiceProvider extends ServiceProvider
 
         CommentPosted::class =>[
             NotifyUserAboutComment::class,
-        ]
+        ],
+
+        EventDeletCommentFromPost::class => [
+            ListenerDeletCommentFromPost::class,
+        ],
+
+        EventNewPostCreated::class => [
+            ListenerNewPostCreated::class,
+        ],
     ];
 
     /**

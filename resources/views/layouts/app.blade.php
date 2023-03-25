@@ -33,10 +33,10 @@
                 <i class="bi bi-airplane-engines-fill"></i>
                 <ul class="nav navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{route('posts.index')}}">Posts</a>
+                        <a class="nav-link" href="{{route('posts.index')}}">{{__('Posts')}}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{route('posts.create')}}">New post</a>
+                        <a class="nav-link" href="{{route('posts.create')}}">{{__('New Post')}}</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{route('contact')}}">Contact</a>
@@ -79,8 +79,7 @@
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                     <a  class="dropdown-item" href="{{route('user.edit',Auth::user()->id)}}">
-                                        Edit profile
-                                        
+                                        {{__('Edit profil')}}
                                     </a>
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();

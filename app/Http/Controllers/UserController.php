@@ -102,6 +102,9 @@ class UserController extends Controller
             
         }
         
+        $user->local = $request->local;
+        $user->save();
+
         $data = $request->only('username');
         $user->update($data);
 

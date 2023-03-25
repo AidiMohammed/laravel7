@@ -8,7 +8,7 @@
     </div>
     @endif           
 
-    <h1>List Posts</h1>
+    <h1>{{__('List Posts')}}</h1>
     @auth
         @if(Auth::user()->is_admin)    
             <ul class="nav nav-tabs my-3">

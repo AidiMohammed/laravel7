@@ -41,6 +41,13 @@
                             </span>    
                         @enderror
                     </div>
+                    
+                    <label for="local">Language</label>
+                    <select class="form-select my-3" id="local" name="local" aria-label="Default select example">
+                        @foreach(App\User::LOCALES as $local => $label )
+                            <option value="{{$local}}" {{$user->local == $local ? 'selected' : ''}}>{{$label}}</option>
+                        @endforeach
+                    </select>
 
                     <button class="btn btn-primary" type="submit" >Update profile</button>
                 </form>

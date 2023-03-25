@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\EventNewPostCreated;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\PostStore;
 use App\Image;
+use App\Jobs\JobNewPostCreate;
+use App\Mail\NewPostCreate;
 use App\Post;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class PostsController extends Controller
@@ -146,6 +150,8 @@ class PostsController extends Controller
             $post->image()->save(image::make(['path' => $path]));
             
         }
+
+        event(new EventNewPostCreated($post));
 
         session()->flash('status','The post has ben created !!');
 

@@ -6,11 +6,9 @@ use App\Answer;
 use Illuminate\Http\Request;
 use App\Comment;
 use App\Events\CommentPosted;
+use App\Events\EventDeletCommentFromPost;
 use App\Http\Requests\AnswerStore;
-use App\Mail\CommentDeletUser;
 use App\Post;
-use App\User;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 
@@ -61,8 +59,7 @@ class CommentController extends Controller
      */
     public function destroy(Comment $comment)
     {
-        $user = User::find($comment->commentable->id); 
-        Mail::to($user->email)->send(new CommentDeletUser($comment));
+        event(new EventDeletCommentFromPost($comment));
         $comment->delete();
         return redirect()->back()->withStatus('The Comment has ben deleted !');
     }
@@ -120,8 +117,6 @@ class CommentController extends Controller
 
     public function deleteAnswer(Answer $answer)
     {
-
-
         $answer->delete();
 
         return redirect()->back()->with('status','Answer has been delete !');

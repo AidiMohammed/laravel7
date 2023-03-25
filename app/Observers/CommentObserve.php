@@ -24,4 +24,9 @@ class CommentObserve
         Cache::forget("show-post-{$comment->commentable->id}");
     }
 
+    public function updating(Comment $comment)
+    {
+        Cache::forget("show-post-{$comment->commentable->id}");
+    }
+
 }
